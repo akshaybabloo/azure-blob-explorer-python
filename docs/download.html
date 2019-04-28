@@ -1,0 +1,157 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Download Contents from Azure Blob &#8212; Azure Blob Explorer 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Upload Contents to Azure Blob" href="upload.html" />
+    <link rel="prev" title="Welcome to Azure Blob Explorer’s documentation!" href="index.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="upload.html" title="Upload Contents to Azure Blob"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Azure Blob Explorer’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Azure Blob Explorer 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="download-contents-from-azure-blob">
+<h1>Download Contents from Azure Blob<a class="headerlink" href="#download-contents-from-azure-blob" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="package-content">
+<h2>Package Content<a class="headerlink" href="#package-content" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="azblobexplorer.AzureBlobDownload">
+<em class="property">class </em><code class="descclassname">azblobexplorer.</code><code class="descname">AzureBlobDownload</code><span class="sig-paren">(</span><em>account_name: str</em>, <em>account_key: str</em>, <em>container_name: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/azblobexplorer/download.html#AzureBlobDownload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobDownload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download a file or folder.</p>
+<dl class="method">
+<dt id="azblobexplorer.AzureBlobDownload.download_file">
+<code class="descname">download_file</code><span class="sig-paren">(</span><em>file_name: str</em>, <em>download_to: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/azblobexplorer/download.html#AzureBlobDownload.download_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobDownload.download_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download a file to a location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_name</strong> – Give a blob path with file name.</p></li>
+<li><p><strong>download_to</strong> – Give a local path to download.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="azblobexplorer.AzureBlobDownload.download_folder">
+<code class="descname">download_folder</code><span class="sig-paren">(</span><em>folder_name: str</em>, <em>download_to: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/azblobexplorer/download.html#AzureBlobDownload.download_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobDownload.download_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download a folder to a location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>folder_name</strong> – Give a folder name.</p></li>
+<li><p><strong>download_to</strong> – Give a local path to download.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="azblobexplorer.AzureBlobDownload.read_file">
+<code class="descname">read_file</code><span class="sig-paren">(</span><em>file_name: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/azblobexplorer/download.html#AzureBlobDownload.read_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobDownload.read_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_name</strong> – Give a file name.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A <code class="docutils literal notranslate"><span class="pre">.read()</span></code> file-type object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Download Contents from Azure Blob</a><ul>
+<li><a class="reference internal" href="#package-content">Package Content</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to Azure Blob Explorer’s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="upload.html"
+                        title="next chapter">Upload Contents to Azure Blob</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/download.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="upload.html" title="Upload Contents to Azure Blob"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Azure Blob Explorer’s documentation!"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Azure Blob Explorer 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Akshay Raj Gollahalli.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
+    </div>
+  </body>
+</html>
