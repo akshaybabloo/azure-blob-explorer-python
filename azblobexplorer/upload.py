@@ -18,7 +18,9 @@ class AzureBlobUpload:
         self.account_key = account_key
         self.container_name = container_name
 
-    def upload_file(self, file_path: str, upload_to: str):
+        self.block_blob_service = BlockBlobService(self.account_name, self.account_key)
+
+    def upload_file(self, file_path: str, upload_to: str = '.'):
         """
         Upload a file to a given blob path.
 
@@ -27,7 +29,14 @@ class AzureBlobUpload:
         :param file_path:
             Absolute path of the file to upload.
         """
-        pass
+
+        path = Path(file_path)
+
+        if upload_to == '.':
+            self.block_blob_service.create_blob_from_path(self.container_name, path.name, path)
+        else:
+            self.block_blob_service.create_blob_from_path(self.container_name,
+                                                          upload_to + path.name, path)
 
     def upload_folder(self, folder_path: str, upload_to: str):
         """
