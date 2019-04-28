@@ -28,6 +28,12 @@ class AzureBlobUpload:
             Give the path to upload.
         :param file_path:
             Absolute path of the file to upload.
+
+        >>> from azblobexplorer import AzureBlobUpload
+        >>> import os
+        >>> az = AzureBlobUpload('account name', 'account key', 'container name')
+        >>> here = os.path.abspath(os.path.dirname(__file__)) + os.sep
+        >>> az.upload_file(os.path.join(here, 'file1.txt'), 'blob_folder/')
         """
 
         path = Path(file_path)
