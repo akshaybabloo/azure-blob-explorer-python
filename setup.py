@@ -1,7 +1,7 @@
 import codecs
 import os
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 from azblobexplorer import __version__
 
@@ -16,7 +16,7 @@ setup(
     name='azblobexplorer',
     version=__version__,
     install_requires=get_requirements('requirements.txt'),
-    packages=['azblobexplorer'],
+    packages=find_packages(),
     url='https://github.com/akshaybabloo/azure-blob-explorer-python',
     license='MIT',
     author='Akshay Raj Gollahalli',
