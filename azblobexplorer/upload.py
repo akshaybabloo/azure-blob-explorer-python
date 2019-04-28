@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 from azure.storage.blob import BlockBlobService
@@ -73,7 +74,7 @@ class AzureBlobUpload:
             else:
                 self.upload_file(path)
 
-    def upload_folder(self, folder_path: str, upload_to: str):
+    def upload_folder(self, folder_path: str, upload_to: str = '.'):
         """
         Upload a folder to a given blob path.
 
@@ -81,5 +82,22 @@ class AzureBlobUpload:
             Give the path to upload.
         :param folder_path:
             Absolute path of the folder to upload.
+
+        >>> import os
+        >>> from azblobexplorer import AzureBlobUpload
+        >>> here = os.path.abspath(os.path.dirname(__file__)) + os.sep
+        >>> az = AzureBlobUpload('account name', 'account key', 'container name')
+        >>> az.upload_folder(os.path.join(here, 'folder_name'))
         """
-        pass
+
+        path = Path(folder_path)
+        file_set = []
+
+        for dir_, _, files in os.walk(path):
+            for file_name in files:
+                rel_dir = os.path.relpath(dir_, path)
+                rel_file = os.path.join(rel_dir, file_name)
+                file_set.append(rel_file)
+
+        print(file_set)
+
