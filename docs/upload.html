@@ -48,7 +48,7 @@
 <dd><p>Upload a file or a folder.</p>
 <dl class="method">
 <dt id="azblobexplorer.AzureBlobUpload.upload_file">
-<code class="descname">upload_file</code><span class="sig-paren">(</span><em>file_path: str</em>, <em>upload_to: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/azblobexplorer/upload.html#AzureBlobUpload.upload_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobUpload.upload_file" title="Permalink to this definition">¶</a></dt>
+<code class="descname">upload_file</code><span class="sig-paren">(</span><em>file_path: str</em>, <em>upload_to: str = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/azblobexplorer/upload.html#AzureBlobUpload.upload_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobUpload.upload_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Upload a file to a given blob path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -58,20 +58,66 @@
 </ul>
 </dd>
 </dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">azblobexplorer</span> <span class="k">import</span> <span class="n">AzureBlobUpload</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">az</span> <span class="o">=</span> <span class="n">AzureBlobUpload</span><span class="p">(</span><span class="s1">&#39;account name&#39;</span><span class="p">,</span> <span class="s1">&#39;account key&#39;</span><span class="p">,</span> <span class="s1">&#39;container name&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">here</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">az</span><span class="o">.</span><span class="n">upload_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span> <span class="s1">&#39;file1.txt&#39;</span><span class="p">),</span> <span class="s1">&#39;blob_folder/&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="azblobexplorer.AzureBlobUpload.upload_files">
+<code class="descname">upload_files</code><span class="sig-paren">(</span><em>files_path: list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/azblobexplorer/upload.html#AzureBlobUpload.upload_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobUpload.upload_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upload a list of files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>files_path</strong> (<em>list</em>) – A list of files to upload.</p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">azblobexplorer</span> <span class="k">import</span> <span class="n">AzureBlobUpload</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">az</span> <span class="o">=</span> <span class="n">AzureBlobUpload</span><span class="p">(</span><span class="s1">&#39;account name&#39;</span><span class="p">,</span> <span class="s1">&#39;account key&#39;</span><span class="p">,</span> <span class="s1">&#39;container name&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">here</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">path_list</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span> <span class="s1">&#39;file1.txt&#39;</span><span class="p">),</span> <span class="s1">&#39;folder_1/&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span> <span class="s1">&#39;file2.txt&#39;</span><span class="p">),</span> <span class="s1">&#39;folder_2/&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span> <span class="s1">&#39;file3.txt&#39;</span><span class="p">)</span>
+<span class="gp">... </span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">az</span><span class="o">.</span><span class="n">upload_files</span><span class="p">(</span><span class="n">path_list</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="azblobexplorer.AzureBlobUpload.upload_folder">
-<code class="descname">upload_folder</code><span class="sig-paren">(</span><em>folder_path: str</em>, <em>upload_to: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/azblobexplorer/upload.html#AzureBlobUpload.upload_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobUpload.upload_folder" title="Permalink to this definition">¶</a></dt>
+<code class="descname">upload_folder</code><span class="sig-paren">(</span><em>folder_path: str</em>, <em>upload_to: str = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/azblobexplorer/upload.html#AzureBlobUpload.upload_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobUpload.upload_folder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Upload a folder to a given blob path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>upload_to</strong> – Give the path to upload.</p></li>
+<li><p><strong>upload_to</strong> – Give the path to upload. Default <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
 <li><p><strong>folder_path</strong> – Absolute path of the folder to upload.</p></li>
 </ul>
 </dd>
 </dl>
+<p><strong>Example without “upload_to”</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">azblobexplorer</span> <span class="k">import</span> <span class="n">AzureBlobUpload</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">here</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">az</span> <span class="o">=</span> <span class="n">AzureBlobUpload</span><span class="p">(</span><span class="s1">&#39;account name&#39;</span><span class="p">,</span> <span class="s1">&#39;account key&#39;</span><span class="p">,</span> <span class="s1">&#39;container name&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">az</span><span class="o">.</span><span class="n">upload_folder</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span> <span class="s1">&#39;folder_name&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><strong>Example with “upload_to”</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">azblobexplorer</span> <span class="k">import</span> <span class="n">AzureBlobUpload</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">here</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">az</span> <span class="o">=</span> <span class="n">AzureBlobUpload</span><span class="p">(</span><span class="s1">&#39;account name&#39;</span><span class="p">,</span> <span class="s1">&#39;account key&#39;</span><span class="p">,</span> <span class="s1">&#39;container name&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">az</span><span class="o">.</span><span class="n">upload_folder</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span> <span class="s1">&#39;folder_name&#39;</span><span class="p">),</span> <span class="n">upload_to</span><span class="o">=</span><span class="s2">&quot;my/blob/location/&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
