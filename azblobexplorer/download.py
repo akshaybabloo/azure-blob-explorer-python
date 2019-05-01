@@ -40,6 +40,7 @@ class AzureBlobDownload:
         :param create_directory:
             If ``download_to`` is a directory and if it does not exists, setting this to ``True``
             will create one
+        :raises OSError: If the directory for ``download_to`` does not exists
 
         >>> from azblobexplorer import AzureBlobDownload
         >>> az = AzureBlobDownload('account name', 'account key', 'container name')
@@ -75,6 +76,8 @@ class AzureBlobDownload:
         :param create_directory:
             If ``download_to`` is a directory and if it does not exists, setting this to ``True``
             will create one
+        :raises NoBlobsFound: If the blob folder is empty or is not found.
+        :raises OSError: If the directory for ``download_to`` does not exists
 
         >>> from azblobexplorer import AzureBlobDownload
         >>> az = AzureBlobDownload('account name', 'account key', 'container name')
