@@ -32,7 +32,12 @@
           <div class="body" role="main">
             
   <h1>Source code for azblobexplorer.delete</h1><div class="highlight"><pre>
-<div class="viewcode-block" id="AzureBlobDelete"><a class="viewcode-back" href="../../delete.html#azblobexplorer.AzureBlobDelete">[docs]</a><span></span><span class="k">class</span> <span class="nc">AzureBlobDelete</span><span class="p">:</span>
+<span></span><span class="kn">from</span> <span class="nn">azure.storage.blob</span> <span class="k">import</span> <span class="n">BlockBlobService</span>
+
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">NoBlobsFound</span>
+
+
+<div class="viewcode-block" id="AzureBlobDelete"><a class="viewcode-back" href="../../delete.html#azblobexplorer.AzureBlobDelete">[docs]</a><span class="k">class</span> <span class="nc">AzureBlobDelete</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Delete file and folder from Azure blob storage.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -49,6 +54,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">account_key</span> <span class="o">=</span> <span class="n">account_key</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">container_name</span> <span class="o">=</span> <span class="n">container_name</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">block_blob_service</span> <span class="o">=</span> <span class="n">BlockBlobService</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">account_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">account_key</span><span class="p">)</span>
+
 <div class="viewcode-block" id="AzureBlobDelete.delete_file"><a class="viewcode-back" href="../../delete.html#azblobexplorer.AzureBlobDelete.delete_file">[docs]</a>    <span class="k">def</span> <span class="nf">delete_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete a file from Azure Storage Blob.</span>
@@ -56,28 +63,84 @@
 <span class="sd">        :param file_name:</span>
 <span class="sd">            Give a file name to delete/</span>
 <span class="sd">        :rtype: bool</span>
-<span class="sd">        :returns: ``True`` if a folder is deleted.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">pass</span></div>
+<span class="sd">        :returns: ``True`` if a file is deleted.</span>
 
-<div class="viewcode-block" id="AzureBlobDelete.delete_folder"><a class="viewcode-back" href="../../delete.html#azblobexplorer.AzureBlobDelete.delete_folder">[docs]</a>    <span class="k">def</span> <span class="nf">delete_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="sd">        &gt;&gt;&gt; from azblobexplorer import AzureBlobDelete</span>
+<span class="sd">        &gt;&gt;&gt; az = AzureBlobDelete(&#39;account name&#39;, &#39;account key&#39;, &#39;container name&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; az.delete_file(&#39;file_name.txt&#39;)</span>
+<span class="sd">        True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">block_blob_service</span><span class="o">.</span><span class="n">delete_blob</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">container_name</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="AzureBlobDelete.delete_files"><a class="viewcode-back" href="../../delete.html#azblobexplorer.AzureBlobDelete.delete_files">[docs]</a>    <span class="k">def</span> <span class="nf">delete_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_names</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delete a list of file from Azure Storage Blob.</span>
+
+<span class="sd">        :param file_names:</span>
+<span class="sd">            Give a list of file names to delete/</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        :returns: ``True`` if files are deleted.</span>
+
+
+<span class="sd">        &gt;&gt;&gt; from azblobexplorer import AzureBlobDelete</span>
+<span class="sd">        &gt;&gt;&gt; az = AzureBlobDelete(&#39;account name&#39;, &#39;account key&#39;, &#39;container name&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; blob_list = [</span>
+<span class="sd">        ...     &#39;folder_1/file1.txt&#39;,</span>
+<span class="sd">        ...     &#39;file3.txt&#39;</span>
+<span class="sd">        ... ]</span>
+<span class="sd">        &gt;&gt;&gt; az.delete_files(blob_list)</span>
+<span class="sd">        True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">file_names</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">delete_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="AzureBlobDelete.delete_folder"><a class="viewcode-back" href="../../delete.html#azblobexplorer.AzureBlobDelete.delete_folder">[docs]</a>    <span class="k">def</span> <span class="nf">delete_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blob_folder_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete a folder from Azure Storage Blob.</span>
 
-<span class="sd">        :param folder_name:</span>
+<span class="sd">        :param blob_folder_name:</span>
 <span class="sd">            Give a folder name to delete</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        :returns: ``True`` if a folder is deleted.</span>
+<span class="sd">        :raises NoBlobsFound: If the blob folder is empty or is not found.</span>
+
+<span class="sd">        &gt;&gt;&gt; from azblobexplorer import AzureBlobDelete</span>
+<span class="sd">        &gt;&gt;&gt; az = AzureBlobDelete(&#39;account name&#39;, &#39;account key&#39;, &#39;container name&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; az.delete_folder(&#39;temp/&#39;)</span>
+<span class="sd">        True</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">pass</span></div>
+
+        <span class="n">blobs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">block_blob_service</span><span class="o">.</span><span class="n">list_blobs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">container_name</span><span class="p">,</span> <span class="n">blob_folder_name</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">blobs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoBlobsFound</span><span class="p">(</span>
+                <span class="s2">&quot;There where 0 blobs found with blob path &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">blob_folder_name</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">blob</span> <span class="ow">in</span> <span class="n">blobs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">delete_file</span><span class="p">(</span><span class="n">blob</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AzureBlobDelete.delete_container"><a class="viewcode-back" href="../../delete.html#azblobexplorer.AzureBlobDelete.delete_container">[docs]</a>    <span class="k">def</span> <span class="nf">delete_container</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete the current container.</span>
 
-<span class="sd">        :return: bool</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        :return: Returns ``True`` is the current container is deleted.</span>
+
+<span class="sd">        &gt;&gt;&gt; from azblobexplorer import AzureBlobDelete</span>
+<span class="sd">        &gt;&gt;&gt; az = AzureBlobDelete(&#39;account name&#39;, &#39;account key&#39;, &#39;container name&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; az.delete_container()</span>
+<span class="sd">        True</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">pass</span></div></div>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">block_blob_service</span><span class="o">.</span><span class="n">delete_container</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">container_name</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div></div>
 </pre></div>
 
           </div>

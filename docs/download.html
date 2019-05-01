@@ -59,6 +59,9 @@
 will create one</p></li>
 </ul>
 </dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>OSError</strong> – If the directory for <code class="docutils literal notranslate"><span class="pre">download_to</span></code> does not exists</p>
+</dd>
 </dl>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">azblobexplorer</span> <span class="k">import</span> <span class="n">AzureBlobDownload</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">az</span> <span class="o">=</span> <span class="n">AzureBlobDownload</span><span class="p">(</span><span class="s1">&#39;account name&#39;</span><span class="p">,</span> <span class="s1">&#39;account key&#39;</span><span class="p">,</span> <span class="s1">&#39;container name&#39;</span><span class="p">)</span>
@@ -69,16 +72,29 @@ will create one</p></li>
 
 <dl class="method">
 <dt id="azblobexplorer.AzureBlobDownload.download_folder">
-<code class="descname">download_folder</code><span class="sig-paren">(</span><em>folder_name: str</em>, <em>download_to: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/azblobexplorer/download.html#AzureBlobDownload.download_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobDownload.download_folder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Download a folder to a location.</p>
+<code class="descname">download_folder</code><span class="sig-paren">(</span><em>blob_folder_name: str</em>, <em>download_to: str = None</em>, <em>create_directory: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/azblobexplorer/download.html#AzureBlobDownload.download_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobDownload.download_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download a blob folder.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>folder_name</strong> – Give a folder name.</p></li>
+<li><p><strong>blob_folder_name</strong> – Give a folder name.</p></li>
 <li><p><strong>download_to</strong> – Give a local path to download.</p></li>
+<li><p><strong>create_directory</strong> – If <code class="docutils literal notranslate"><span class="pre">download_to</span></code> is a directory and if it does not exists, setting this to <code class="docutils literal notranslate"><span class="pre">True</span></code>
+will create one</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>NoBlobsFound</strong> – If the blob folder is empty or is not found.</p></li>
+<li><p><strong>OSError</strong> – If the directory for <code class="docutils literal notranslate"><span class="pre">download_to</span></code> does not exists</p></li>
 </ul>
 </dd>
 </dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">azblobexplorer</span> <span class="k">import</span> <span class="n">AzureBlobDownload</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">az</span> <span class="o">=</span> <span class="n">AzureBlobDownload</span><span class="p">(</span><span class="s1">&#39;account name&#39;</span><span class="p">,</span> <span class="s1">&#39;account key&#39;</span><span class="p">,</span> <span class="s1">&#39;container name&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">az</span><span class="o">.</span><span class="n">download_folder</span><span class="p">(</span><span class="s1">&#39;some/name/file.txt&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
