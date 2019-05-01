@@ -1,3 +1,8 @@
+import os
+from pathlib import Path
+
+from azure.storage.blob import BlockBlobService
+
 __all__ = ['AzureBlobDownload']
 
 
@@ -19,16 +24,42 @@ class AzureBlobDownload:
         self.account_key = account_key
         self.container_name = container_name
 
-    def download_file(self, file_name: str, download_to: str):
+        self.block_blob_service = BlockBlobService(self.account_name, self.account_key)
+
+    def download_file(self, blob_name: str, download_to: str = None,
+                      create_directory: bool = False):
         """
         Download a file to a location.
 
-        :param file_name:
+        :param blob_name:
             Give a blob path with file name.
         :param download_to:
-            Give a local path to download.
+            Give a local absolute path to download.
+        :param create_directory:
+            If ``download_to`` is a directory and if it does not exists, setting this to ``True``
+            will create one
+
+        >>> from azblobexplorer import AzureBlobDownload
+        >>> az = AzureBlobDownload('account name', 'account key', 'container name')
+        >>> az.download_file('some/name/file.txt')
         """
-        pass
+
+        file_dict = self.read_file(blob_name)
+
+        if download_to is None:
+            write_to = Path(file_dict['file_name'])
+        else:
+            if not create_directory:
+                if Path(download_to).exists():
+                    write_to = Path(os.path.join(download_to, file_dict['file_name']))
+                else:
+                    raise OSError('Directory does not exists, set creat_directory=True to create.')
+            else:
+                os.makedirs(Path(download_to), exist_ok=True)
+                write_to = Path(os.path.join(download_to, file_dict['file_name']))
+
+        with open(write_to, 'wb') as file:
+            file.write(file_dict['content'])
 
     def download_folder(self, folder_name: str, download_to: str):
         """
@@ -67,6 +98,3 @@ class AzureBlobDownload:
             'content': blob_obj.content,
             'file_size_bytes': blob_obj.properties.content_length
         }
-
-
-
