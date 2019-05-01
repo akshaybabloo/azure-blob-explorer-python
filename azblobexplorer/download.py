@@ -41,13 +41,32 @@ class AzureBlobDownload:
         """
         pass
 
-    def read_file(self, file_name: str):
+    def read_file(self, blob_name: str) -> dict:
         """
         Read a file.
 
-        :param file_name:
+        :param blob_name:
             Give a file name.
         :return:
-            A ``.read()`` file-type object.
+            Returns a dictionary of name, content,
+
+        >>> from azblobexplorer import AzureBlobDownload
+        >>> az = AzureBlobDownload('account name', 'account key', 'container name')
+        >>> az.read_file('some/name/file.txt')
+        {
+            'file_name': 'file.txt',
+            'content': byte content,
+            'file_size_bytes': size in bytes
+        }
         """
-        pass
+
+        blob_obj = self.block_blob_service.get_blob_to_bytes(self.container_name, blob_name)
+
+        return {
+            'file_name': blob_obj.name,
+            'content': blob_obj.content,
+            'file_size_bytes': blob_obj.properties.content_length
+        }
+
+
+
