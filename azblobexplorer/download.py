@@ -61,16 +61,23 @@ class AzureBlobDownload:
         with open(write_to, 'wb') as file:
             file.write(file_dict['content'])
 
-    def download_folder(self, folder_name: str, download_to: str):
+    def download_folder(self, blob_folder_name: str, download_to: str, create_directory: bool = False):
         """
-        Download a folder to a location.
+        Download a blob folder.
 
-        :param folder_name:
+        :param blob_folder_name:
             Give a folder name.
         :param download_to:
             Give a local path to download.
+        :param create_directory:
+            If ``download_to`` is a directory and if it does not exists, setting this to ``True``
+            will create one
         """
-        pass
+
+        blobs = list(self.block_blob_service.list_blobs(self.container_name, blob_folder_name))
+
+        if len(blobs) == 0:
+            raise
 
     def read_file(self, blob_name: str) -> dict:
         """
