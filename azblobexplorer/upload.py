@@ -26,7 +26,7 @@ class AzureBlobUpload:
 
         self.block_blob_service = BlockBlobService(self.account_name, self.account_key)
 
-    def upload_file(self, file_path: str, upload_to: str = '.'):
+    def upload_file(self, file_path: str, upload_to: str = None):
         """
         Upload a file to a given blob path.
 
@@ -44,7 +44,7 @@ class AzureBlobUpload:
 
         path = Path(file_path)
 
-        if upload_to == '.':
+        if upload_to is None:
             self.block_blob_service.create_blob_from_path(self.container_name, path.name, path)
         else:
             self.block_blob_service.create_blob_from_path(self.container_name,
@@ -55,6 +55,7 @@ class AzureBlobUpload:
         Upload a list of files.
 
         :param list files_path:
+            A list of files to upload.
 
         >>> import os
         >>> from azblobexplorer import AzureBlobUpload
@@ -74,30 +75,45 @@ class AzureBlobUpload:
             else:
                 self.upload_file(path)
 
-    def upload_folder(self, folder_path: str, upload_to: str = '.'):
+    def upload_folder(self, folder_path: str, upload_to: str = None):
         """
         Upload a folder to a given blob path.
 
         :param upload_to:
-            Give the path to upload.
+            Give the path to upload. Default ``None``.
         :param folder_path:
             Absolute path of the folder to upload.
+
+        **Example without "upload_to"**
 
         >>> import os
         >>> from azblobexplorer import AzureBlobUpload
         >>> here = os.path.abspath(os.path.dirname(__file__)) + os.sep
         >>> az = AzureBlobUpload('account name', 'account key', 'container name')
         >>> az.upload_folder(os.path.join(here, 'folder_name'))
+
+        **Example with "upload_to"**
+
+        >>> import os
+        >>> from azblobexplorer import AzureBlobUpload
+        >>> here = os.path.abspath(os.path.dirname(__file__)) + os.sep
+        >>> az = AzureBlobUpload('account name', 'account key', 'container name')
+        >>> az.upload_folder(os.path.join(here, 'folder_name'), upload_to="my/blob/location/")
         """
 
         path = Path(folder_path)
-        file_set = []
 
-        for dir_, _, files in os.walk(path):
+        if not path.is_dir():
+            raise TypeError("The path should be a folder.")
+
+        root_name = path.name
+
+        for _dir, _, files in os.walk(path):
             for file_name in files:
-                rel_dir = os.path.relpath(dir_, path)
-                rel_file = os.path.join(rel_dir, file_name)
-                file_set.append(rel_file)
-
-        print(file_set)
-
+                rel_dir = os.path.relpath(_dir, path)
+                rel_folder_path = os.path.join(root_name, rel_dir) + '/'
+                abs_path = os.path.join(_dir, file_name)
+                if upload_to is None:
+                    self.upload_file(abs_path, rel_folder_path)
+                else:
+                    self.upload_file(abs_path, upload_to + rel_folder_path)
