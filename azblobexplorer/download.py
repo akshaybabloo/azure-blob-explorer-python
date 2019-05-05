@@ -64,8 +64,7 @@ class AzureBlobDownload:
         with open(write_to, 'wb') as file:
             file.write(file_dict['content'])
 
-    def download_folder(self, blob_folder_name: str, download_to: str = None,
-                        create_directory: bool = False):
+    def download_folder(self, blob_folder_name: str, download_to: str = None):
         """
         Download a blob folder.
 
@@ -73,9 +72,6 @@ class AzureBlobDownload:
             Give a folder name.
         :param download_to:
             Give a local path to download.
-        :param create_directory:
-            If ``download_to`` is a directory and if it does not exists, setting this to ``True``
-            will create one
         :raises NoBlobsFound: If the blob folder is empty or is not found.
         :raises OSError: If the directory for ``download_to`` does not exists
 
@@ -100,27 +96,14 @@ class AzureBlobDownload:
                 file.write(_blob['content'])
                 file.close()
         else:
-            if not create_directory:
-                if Path(download_to).exists():
-                    for blob in blobs:
-                        name = blob.name
-                        path = Path(os.path.join(download_to, name))
-                        path.parent.mkdir(parents=True, exist_ok=True)
-                        _blob = self.read_file(name)
-                        file = open(path, 'wb')
-                        file.write(_blob['content'])
-                        file.close()
-                else:
-                    raise OSError('Directory does not exists, set creat_directory=True to create.')
-            else:
-                for blob in blobs:
-                    name = blob.name
-                    path = Path(os.path.join(download_to, name))
-                    path.parent.mkdir(parents=True, exist_ok=True)
-                    _blob = self.read_file(name)
-                    file = open(path, 'wb')
-                    file.write(_blob['content'])
-                    file.close()
+            for blob in blobs:
+                name = blob.name
+                path = Path(os.path.join(download_to, name))
+                path.parent.mkdir(parents=True, exist_ok=True)
+                _blob = self.read_file(name)
+                file = open(path, 'wb')
+                file.write(_blob['content'])
+                file.close()
 
     def read_file(self, blob_name: str) -> dict:
         """
