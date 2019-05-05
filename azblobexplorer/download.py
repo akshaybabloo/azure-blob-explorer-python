@@ -28,8 +28,7 @@ class AzureBlobDownload:
 
         self.block_blob_service = BlockBlobService(self.account_name, self.account_key)
 
-    def download_file(self, blob_name: str, download_to: str = None,
-                      create_directory: bool = False):
+    def download_file(self, blob_name: str, download_to: str = None):
         """
         Download a file to a location.
 
@@ -37,9 +36,6 @@ class AzureBlobDownload:
             Give a blob path with file name.
         :param download_to:
             Give a local absolute path to download.
-        :param create_directory:
-            If ``download_to`` is a directory and if it does not exists, setting this to ``True``
-            will create one
         :raises OSError: If the directory for ``download_to`` does not exists
 
         >>> from azblobexplorer import AzureBlobDownload
@@ -52,14 +48,8 @@ class AzureBlobDownload:
         if download_to is None:
             write_to = Path(file_dict['file_name'])
         else:
-            if not create_directory:
-                if Path(download_to).exists():
-                    write_to = Path(os.path.join(download_to, file_dict['file_name']))
-                else:
-                    raise OSError('Directory does not exists, set creat_directory=True to create.')
-            else:
-                os.makedirs(Path(download_to), exist_ok=True)
-                write_to = Path(os.path.join(download_to, file_dict['file_name']))
+            write_to = Path(os.path.join(download_to, file_dict['file_name']))
+            write_to.parent.mkdir(parents=True, exist_ok=True)
 
         with open(write_to, 'wb') as file:
             file.write(file_dict['content'])
