@@ -80,9 +80,9 @@ class AzureBlobDownload:
         >>> az.download_folder('some/name/file.txt')
         """
 
-        blobs = list(self.block_blob_service.list_blobs(self.container_name, blob_folder_name))
+        blobs = self.block_blob_service.list_blobs(self.container_name, blob_folder_name)
 
-        if len(blobs) == 0:
+        if blobs.items == 0:
             raise NoBlobsFound(
                 "There where 0 blobs found with blob path '{}'".format(blob_folder_name))
 
