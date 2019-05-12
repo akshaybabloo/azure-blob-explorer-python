@@ -79,16 +79,16 @@ class AzureBlobDownload:
         if download_to is None:
             for blob in blobs:
                 name = blob.name
-                path = Path(name)
+                path = Path(os.path.join(blob_folder_name, name))
                 path.parent.mkdir(parents=True, exist_ok=True)
                 _blob = self.read_file(name)
-                file = open(name, 'wb')
+                file = open(path, 'wb')
                 file.write(_blob['content'])
                 file.close()
         else:
             for blob in blobs:
                 name = blob.name
-                path = Path(os.path.join(download_to, name))
+                path = Path(os.path.join(download_to, blob_folder_name, name))
                 path.parent.mkdir(parents=True, exist_ok=True)
                 _blob = self.read_file(name)
                 file = open(path, 'wb')
