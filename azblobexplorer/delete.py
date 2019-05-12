@@ -91,6 +91,8 @@ class AzureBlobDelete:
         for blob in blobs:
             self.delete_file(blob.name)
 
+        return True
+
     def delete_container(self) -> bool:
         """
         Delete the current container.
