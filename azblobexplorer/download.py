@@ -46,7 +46,7 @@ class AzureBlobDownload:
         file_dict = self.read_file(blob_name)
 
         if download_to is None:
-            write_to = Path(file_dict['file_name'])
+            write_to = Path(file_dict['file_name']).name
         else:
             write_to = Path(os.path.join(download_to, file_dict['file_name']))
             write_to.parent.mkdir(parents=True, exist_ok=True)
