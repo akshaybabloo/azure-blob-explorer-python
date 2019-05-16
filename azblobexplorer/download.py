@@ -44,11 +44,12 @@ class AzureBlobDownload:
         """
 
         file_dict = self.read_file(blob_name)
+        file_name = Path(file_dict['file_name']).name
 
         if download_to is None:
-            write_to = Path(file_dict['file_name']).name
+            write_to = file_name
         else:
-            write_to = Path(os.path.join(download_to, file_dict['file_name']))
+            write_to = Path(os.path.join(download_to, file_name))
             write_to.parent.mkdir(parents=True, exist_ok=True)
 
         with open(write_to, 'wb') as file:
