@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>azblobexplorer.download &#8212; Azure Blob Explorer 1.1 documentation</title>
+    <title>azblobexplorer.download &#8212; Azure Blob Explorer 1.1.3 documentation</title>
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -21,7 +21,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Azure Blob Explorer 1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Azure Blob Explorer 1.1.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -62,8 +62,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">block_blob_service</span> <span class="o">=</span> <span class="n">BlockBlobService</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">account_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">account_key</span><span class="p">)</span>
 
-<div class="viewcode-block" id="AzureBlobDownload.download_file"><a class="viewcode-back" href="../../download.html#azblobexplorer.AzureBlobDownload.download_file">[docs]</a>    <span class="k">def</span> <span class="nf">download_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blob_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">download_to</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                      <span class="n">create_directory</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="AzureBlobDownload.download_file"><a class="viewcode-back" href="../../download.html#azblobexplorer.AzureBlobDownload.download_file">[docs]</a>    <span class="k">def</span> <span class="nf">download_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blob_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">download_to</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Download a file to a location.</span>
 
@@ -71,9 +70,6 @@
 <span class="sd">            Give a blob path with file name.</span>
 <span class="sd">        :param download_to:</span>
 <span class="sd">            Give a local absolute path to download.</span>
-<span class="sd">        :param create_directory:</span>
-<span class="sd">            If ``download_to`` is a directory and if it does not exists, setting this to ``True``</span>
-<span class="sd">            will create one</span>
 <span class="sd">        :raises OSError: If the directory for ``download_to`` does not exists</span>
 
 <span class="sd">        &gt;&gt;&gt; from azblobexplorer import AzureBlobDownload</span>
@@ -82,24 +78,18 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">file_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">blob_name</span><span class="p">)</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file_dict</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">name</span>
 
         <span class="k">if</span> <span class="n">download_to</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">write_to</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file_dict</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">])</span>
+            <span class="n">write_to</span> <span class="o">=</span> <span class="n">file_name</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">create_directory</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">download_to</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-                    <span class="n">write_to</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">download_to</span><span class="p">,</span> <span class="n">file_dict</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">]))</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="s1">&#39;Directory does not exists, set creat_directory=True to create.&#39;</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">download_to</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-                <span class="n">write_to</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">download_to</span><span class="p">,</span> <span class="n">file_dict</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">]))</span>
+            <span class="n">write_to</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">download_to</span><span class="p">,</span> <span class="n">file_name</span><span class="p">))</span>
+            <span class="n">write_to</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">write_to</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
             <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file_dict</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="AzureBlobDownload.download_folder"><a class="viewcode-back" href="../../download.html#azblobexplorer.AzureBlobDownload.download_folder">[docs]</a>    <span class="k">def</span> <span class="nf">download_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blob_folder_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">download_to</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                        <span class="n">create_directory</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="AzureBlobDownload.download_folder"><a class="viewcode-back" href="../../download.html#azblobexplorer.AzureBlobDownload.download_folder">[docs]</a>    <span class="k">def</span> <span class="nf">download_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blob_folder_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">download_to</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Download a blob folder.</span>
 
@@ -107,9 +97,6 @@
 <span class="sd">            Give a folder name.</span>
 <span class="sd">        :param download_to:</span>
 <span class="sd">            Give a local path to download.</span>
-<span class="sd">        :param create_directory:</span>
-<span class="sd">            If ``download_to`` is a directory and if it does not exists, setting this to ``True``</span>
-<span class="sd">            will create one</span>
 <span class="sd">        :raises NoBlobsFound: If the blob folder is empty or is not found.</span>
 <span class="sd">        :raises OSError: If the directory for ``download_to`` does not exists</span>
 
@@ -118,43 +105,30 @@
 <span class="sd">        &gt;&gt;&gt; az.download_folder(&#39;some/name/file.txt&#39;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">blobs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">block_blob_service</span><span class="o">.</span><span class="n">list_blobs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">container_name</span><span class="p">,</span> <span class="n">blob_folder_name</span><span class="p">))</span>
+        <span class="n">blobs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_blob_service</span><span class="o">.</span><span class="n">list_blobs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">container_name</span><span class="p">,</span> <span class="n">blob_folder_name</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">blobs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">blobs</span><span class="o">.</span><span class="n">items</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">NoBlobsFound</span><span class="p">(</span>
                 <span class="s2">&quot;There where 0 blobs found with blob path &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">blob_folder_name</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">download_to</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">blob</span> <span class="ow">in</span> <span class="n">blobs</span><span class="p">:</span>
                 <span class="n">name</span> <span class="o">=</span> <span class="n">blob</span><span class="o">.</span><span class="n">name</span>
-                <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">blob_folder_name</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
                 <span class="n">path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                 <span class="n">_blob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-                <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span>
+                <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span>
                 <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">_blob</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">])</span>
                 <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">create_directory</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">download_to</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-                    <span class="k">for</span> <span class="n">blob</span> <span class="ow">in</span> <span class="n">blobs</span><span class="p">:</span>
-                        <span class="n">name</span> <span class="o">=</span> <span class="n">blob</span><span class="o">.</span><span class="n">name</span>
-                        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">download_to</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
-                        <span class="n">path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-                        <span class="n">_blob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-                        <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span>
-                        <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">_blob</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">])</span>
-                        <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="s1">&#39;Directory does not exists, set creat_directory=True to create.&#39;</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">blob</span> <span class="ow">in</span> <span class="n">blobs</span><span class="p">:</span>
-                    <span class="n">name</span> <span class="o">=</span> <span class="n">blob</span><span class="o">.</span><span class="n">name</span>
-                    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">download_to</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
-                    <span class="n">path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-                    <span class="n">_blob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-                    <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span>
-                    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">_blob</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">])</span>
-                    <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+            <span class="k">for</span> <span class="n">blob</span> <span class="ow">in</span> <span class="n">blobs</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">blob</span><span class="o">.</span><span class="n">name</span>
+                <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">download_to</span><span class="p">,</span> <span class="n">blob_folder_name</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+                <span class="n">path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">_blob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">_blob</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">])</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="AzureBlobDownload.read_file"><a class="viewcode-back" href="../../download.html#azblobexplorer.AzureBlobDownload.read_file">[docs]</a>    <span class="k">def</span> <span class="nf">read_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blob_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -209,7 +183,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Azure Blob Explorer 1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Azure Blob Explorer 1.1.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
