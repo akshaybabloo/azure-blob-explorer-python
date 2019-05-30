@@ -1,7 +1,8 @@
 import os
+from datetime import datetime, timedelta
 from pathlib import Path
 
-from azure.storage.blob import BlockBlobService
+from azure.storage.blob import BlockBlobService, BlobPermissions
 
 from .exceptions import NoBlobsFound
 
@@ -122,3 +123,26 @@ class AzureBlobDownload:
             'content': blob_obj.content,
             'file_size_bytes': blob_obj.properties.content_length
         }
+
+    def generate_url(self, blob_name: str, sas: bool = False) -> str:
+        """
+        Generate's blob URL. It can also generate Shared Access Signature (SAS) if ``sas=True``.
+
+        :param blob_name: Name of the blob
+        :type blob_name: str
+        :param sas: Set ``True`` to generate SAS key
+        :type sas: bool
+        :return: Blob URL
+        :rtype: str
+        """
+
+        if sas:
+            token = self.block_blob_service.generate_blob_shared_access_signature(
+                self.container_name,
+                blob_name,
+                permission=BlobPermissions.READ,
+                expiry=datetime.utcnow() + timedelta(hours=1)
+            )
+            return self.block_blob_service.make_blob_url(self.container_name, blob_name, sas_token=token)
+        else:
+            return self.block_blob_service.make_blob_url(self.container_name, blob_name)
