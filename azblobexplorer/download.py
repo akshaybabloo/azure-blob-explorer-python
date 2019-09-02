@@ -124,12 +124,14 @@ class AzureBlobDownload:
             'file_size_bytes': blob_obj.properties.content_length
         }
 
-    def generate_url(self, blob_name: str, sas: bool = False) -> str:
+    def generate_url(self, blob_name: str, permission: BlobPermissions = BlobPermissions.READ, sas: bool = False) -> str:
         """
         Generate's blob URL. It can also generate Shared Access Signature (SAS) if ``sas=True``.
 
         :param blob_name: Name of the blob
         :type blob_name: str
+        :param permission: Permissions for the data
+        :type permission: azure.storage.blob.BlobPermissions
         :param sas: Set ``True`` to generate SAS key
         :type sas: bool
         :return: Blob URL
@@ -140,7 +142,7 @@ class AzureBlobDownload:
             token = self.block_blob_service.generate_blob_shared_access_signature(
                 self.container_name,
                 blob_name,
-                permission=BlobPermissions.READ,
+                permission=permission,
                 expiry=datetime.utcnow() + timedelta(hours=1)
             )
             return self.block_blob_service.make_blob_url(self.container_name, blob_name, sas_token=token)
