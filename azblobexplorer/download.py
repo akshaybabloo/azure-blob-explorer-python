@@ -148,3 +148,32 @@ class AzureBlobDownload:
             return self.block_blob_service.make_blob_url(self.container_name, blob_name, sas_token=token)
         else:
             return self.block_blob_service.make_blob_url(self.container_name, blob_name)
+
+    def generate_url_mime(self, blob_name: str, mime_type: str, sas: bool = False,
+                          permission: BlobPermissions = BlobPermissions.READ) -> str:
+        """
+        Generate's blob URL. It can also generate Shared Access Signature (SAS) if ``sas=True``.
+
+        :param blob_name: Name of the blob
+        :type blob_name: str
+        :param mime_type: MIME type of the application
+        :type mime_type: str
+        :param sas: Set ``True`` to generate SAS key
+        :type sas: bool
+        :param permission: Permissions for the data
+        :type permission: azure.storage.blob.BlobPermissions
+        :return: Blob URL
+        :rtype: str
+        """
+
+        if sas:
+            token = self.block_blob_service.generate_blob_shared_access_signature(
+                self.container_name,
+                blob_name,
+                permission=permission,
+                expiry=datetime.utcnow() + timedelta(hours=1),
+                content_type=mime_type
+            )
+            return self.block_blob_service.make_blob_url(self.container_name, blob_name, sas_token=token)
+        else:
+            return self.block_blob_service.make_blob_url(self.container_name, blob_name)
