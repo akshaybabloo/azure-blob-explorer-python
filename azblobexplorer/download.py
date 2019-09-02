@@ -152,7 +152,7 @@ class AzureBlobDownload:
     def generate_url_mime(self, blob_name: str, mime_type: str, sas: bool = False,
                           permission: BlobPermissions = BlobPermissions.READ) -> str:
         """
-        Generate's blob URL. It can also generate Shared Access Signature (SAS) if ``sas=True``.
+        Generate's blob URL with MIME type. It can also generate Shared Access Signature (SAS) if ``sas=True``.
 
         :param blob_name: Name of the blob
         :type blob_name: str
