@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Deleting Contents from Azure Blob &#8212; Azure Blob Explorer 1.1.4 documentation</title>
+    <title>Deleting Contents from Azure Blob &#8212; Azure Blob Explorer 1.1.5 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -29,7 +29,7 @@
         <li class="right" >
           <a href="upload.html" title="Upload Contents to Azure Blob"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Azure Blob Explorer 1.1.4 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Azure Blob Explorer 1.1.5 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -44,11 +44,11 @@
 <h2>Package Content<a class="headerlink" href="#package-content" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="azblobexplorer.AzureBlobDelete">
-<em class="property">class </em><code class="descclassname">azblobexplorer.</code><code class="descname">AzureBlobDelete</code><span class="sig-paren">(</span><em>account_name: str</em>, <em>account_key: str</em>, <em>container_name: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/azblobexplorer/delete.html#AzureBlobDelete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobDelete" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">azblobexplorer.</code><code class="sig-name descname">AzureBlobDelete</code><span class="sig-paren">(</span><em class="sig-param">account_name: str</em>, <em class="sig-param">account_key: str</em>, <em class="sig-param">container_name: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/azblobexplorer/delete.html#AzureBlobDelete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobDelete" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete file and folder from Azure blob storage.</p>
 <dl class="method">
 <dt id="azblobexplorer.AzureBlobDelete.delete_container">
-<code class="descname">delete_container</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/azblobexplorer/delete.html#AzureBlobDelete.delete_container"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobDelete.delete_container" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">delete_container</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/azblobexplorer/delete.html#AzureBlobDelete.delete_container"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobDelete.delete_container" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete the current container.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -68,7 +68,7 @@
 
 <dl class="method">
 <dt id="azblobexplorer.AzureBlobDelete.delete_file">
-<code class="descname">delete_file</code><span class="sig-paren">(</span><em>file_name: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/azblobexplorer/delete.html#AzureBlobDelete.delete_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobDelete.delete_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">delete_file</code><span class="sig-paren">(</span><em class="sig-param">file_name: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/azblobexplorer/delete.html#AzureBlobDelete.delete_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobDelete.delete_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete a file from Azure Storage Blob.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -91,7 +91,7 @@
 
 <dl class="method">
 <dt id="azblobexplorer.AzureBlobDelete.delete_files">
-<code class="descname">delete_files</code><span class="sig-paren">(</span><em>file_names: list</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/azblobexplorer/delete.html#AzureBlobDelete.delete_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobDelete.delete_files" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">delete_files</code><span class="sig-paren">(</span><em class="sig-param">file_names: list</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/azblobexplorer/delete.html#AzureBlobDelete.delete_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobDelete.delete_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete a list of file from Azure Storage Blob.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -118,7 +118,7 @@
 
 <dl class="method">
 <dt id="azblobexplorer.AzureBlobDelete.delete_folder">
-<code class="descname">delete_folder</code><span class="sig-paren">(</span><em>blob_folder_name: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/azblobexplorer/delete.html#AzureBlobDelete.delete_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobDelete.delete_folder" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">delete_folder</code><span class="sig-paren">(</span><em class="sig-param">blob_folder_name: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/azblobexplorer/delete.html#AzureBlobDelete.delete_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobDelete.delete_folder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete a folder from Azure Storage Blob.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -175,10 +175,10 @@
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -200,12 +200,12 @@
         <li class="right" >
           <a href="upload.html" title="Upload Contents to Azure Blob"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Azure Blob Explorer 1.1.4 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Azure Blob Explorer 1.1.5 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, Akshay Raj Gollahalli.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
     </div>
   </body>
 </html>
