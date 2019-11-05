@@ -124,11 +124,13 @@ class AzureBlobDownload:
             'file_size_bytes': blob_obj.properties.content_length
         }
 
-    def generate_url(self, blob_name: str, permission: BlobPermissions = BlobPermissions.READ, sas: bool = False) -> str:
+    def generate_url(self, blob_name: str, permission: BlobPermissions = BlobPermissions.READ,
+                     sas: bool = False, access_time: int = 1) -> str:
         """
         Generate's blob URL. It can also generate Shared Access Signature (SAS) if ``sas=True``.
 
-        :param blob_name: Name of the blob
+        :param access_time: Time till the URL is valid
+        :param blob_name: Name of the blob, this could be a path
         :type blob_name: str
         :param permission: Permissions for the data
         :type permission: azure.storage.blob.BlobPermissions
@@ -136,6 +138,22 @@ class AzureBlobDownload:
         :type sas: bool
         :return: Blob URL
         :rtype: str
+
+        **Example without ``sas``**
+
+        >>> import os
+        >>> from azblobexplorer import AzureBlobDownload
+        >>> az = AzureBlobDownload('account name', 'account key', 'container name')
+        >>> az.generate_url("filename.txt")
+        https://containername.blob.core.windows.net/blobname/filename.txt
+
+        **Example with ``upload_to`` and ``sas``**
+
+        >>> import os
+        >>> from azblobexplorer import AzureBlobDownload
+        >>> az = AzureBlobDownload('account name', 'account key', 'container name')
+        >>> az.generate_url("filename.txt", sas=True)
+        https://containername.blob.core.windows.net/blobname/filename.txt?se=2019-11-05T16%3A33%3A46Z&sp=w&sv=2019-02-02&sr=b&sig=t%2BpUG2C2FQKp/Hb8SdCsmaZCZxbYXHUedwsquItGx%2BM%3D
         """
 
         if sas:
@@ -143,7 +161,7 @@ class AzureBlobDownload:
                 self.container_name,
                 blob_name,
                 permission=permission,
-                expiry=datetime.utcnow() + timedelta(hours=1)
+                expiry=datetime.utcnow() + timedelta(hours=access_time)
             )
             return self.block_blob_service.make_blob_url(self.container_name, blob_name, sas_token=token)
         else:
