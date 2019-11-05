@@ -119,33 +119,44 @@ class AzureBlobUpload:
                 else:
                     self.upload_file(abs_path, upload_to + rel_folder_path)
 
-    def generate_url(self, file_name: str, permission: BlobPermissions = BlobPermissions.WRITE,
-                     sas: bool = False, access_time: int = 1, upload_to: str = None) -> str:
+    def generate_url(self, blob_name: str, permission: BlobPermissions = BlobPermissions.WRITE,
+                     sas: bool = False, access_time: int = 1) -> str:
         """
         Generate's blob URL to upload a file. It can also generate Shared Access Signature (SAS) if ``sas=True``.
 
-        :param file_name: Name of the file that you are uploading
+        :param blob_name: Name of the file that you are uploading, this can also be a path with file name
         :param access_time: Time till the URL is valid
-        :param upload_to: Name of the blob
-        :type upload_to: str
         :param permission: Permissions for the data
         :type permission: azure.storage.blob.BlobPermissions
         :param sas: Set ``True`` to generate SAS key
         :type sas: bool
         :return: Blob URL
         :rtype: str
-        """
 
-        if upload_to is not None:
-            file_name = upload_to + file_name
+        **Example without ``sas``**
+
+        >>> import os
+        >>> from azblobexplorer import AzureBlobUpload
+        >>> az = AzureBlobUpload('account name', 'account key', 'container name')
+        >>> az.generate_url("filename.txt")
+        https://containername.blob.core.windows.net/blobname/filename.txt
+
+        **Example with ``sas``**
+
+        >>> import os
+        >>> from azblobexplorer import AzureBlobUpload
+        >>> az = AzureBlobUpload('account name', 'account key', 'container name')
+        >>> az.generate_url("path/to/filename.txt", sas=True)
+        https://containername.blob.core.windows.net/blobname/path/to/upload/path/to/filename.txt?se=2019-11-05T16%3A33%3A46Z&sp=w&sv=2019-02-02&sr=b&sig=t%2BpUG2C2FQKp/Hb8SdCsmaZCZxbYXHUedwsquItGx%2BM%3D
+        """
 
         if sas:
             token = self.block_blob_service.generate_blob_shared_access_signature(
                 self.container_name,
-                file_name,
+                blob_name,
                 permission=permission,
                 expiry=datetime.utcnow() + timedelta(hours=access_time)
             )
-            return self.block_blob_service.make_blob_url(self.container_name, file_name, sas_token=token)
+            return self.block_blob_service.make_blob_url(self.container_name, blob_name, sas_token=token)
         else:
-            return self.block_blob_service.make_blob_url(self.container_name, file_name)
+            return self.block_blob_service.make_blob_url(self.container_name, blob_name)
