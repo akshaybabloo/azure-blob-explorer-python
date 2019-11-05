@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>azblobexplorer.download &#8212; Azure Blob Explorer 1.1.5 documentation</title>
+    <title>azblobexplorer.download &#8212; Azure Blob Explorer 1.2.0 documentation</title>
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -21,7 +21,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Azure Blob Explorer 1.1.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Azure Blob Explorer 1.2.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -158,11 +158,13 @@
             <span class="s1">&#39;file_size_bytes&#39;</span><span class="p">:</span> <span class="n">blob_obj</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">content_length</span>
         <span class="p">}</span></div>
 
-<div class="viewcode-block" id="AzureBlobDownload.generate_url"><a class="viewcode-back" href="../../download.html#azblobexplorer.AzureBlobDownload.generate_url">[docs]</a>    <span class="k">def</span> <span class="nf">generate_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blob_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">permission</span><span class="p">:</span> <span class="n">BlobPermissions</span> <span class="o">=</span> <span class="n">BlobPermissions</span><span class="o">.</span><span class="n">READ</span><span class="p">,</span> <span class="n">sas</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="AzureBlobDownload.generate_url"><a class="viewcode-back" href="../../download.html#azblobexplorer.AzureBlobDownload.generate_url">[docs]</a>    <span class="k">def</span> <span class="nf">generate_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blob_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">permission</span><span class="p">:</span> <span class="n">BlobPermissions</span> <span class="o">=</span> <span class="n">BlobPermissions</span><span class="o">.</span><span class="n">READ</span><span class="p">,</span>
+                     <span class="n">sas</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">access_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate&#39;s blob URL. It can also generate Shared Access Signature (SAS) if ``sas=True``.</span>
 
-<span class="sd">        :param blob_name: Name of the blob</span>
+<span class="sd">        :param access_time: Time till the URL is valid</span>
+<span class="sd">        :param blob_name: Name of the blob, this could be a path</span>
 <span class="sd">        :type blob_name: str</span>
 <span class="sd">        :param permission: Permissions for the data</span>
 <span class="sd">        :type permission: azure.storage.blob.BlobPermissions</span>
@@ -170,6 +172,22 @@
 <span class="sd">        :type sas: bool</span>
 <span class="sd">        :return: Blob URL</span>
 <span class="sd">        :rtype: str</span>
+
+<span class="sd">        **Example without ``sas``**</span>
+
+<span class="sd">        &gt;&gt;&gt; import os</span>
+<span class="sd">        &gt;&gt;&gt; from azblobexplorer import AzureBlobDownload</span>
+<span class="sd">        &gt;&gt;&gt; az = AzureBlobDownload(&#39;account name&#39;, &#39;account key&#39;, &#39;container name&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; az.generate_url(&quot;filename.txt&quot;)</span>
+<span class="sd">        https://containername.blob.core.windows.net/blobname/filename.txt</span>
+
+<span class="sd">        **Example with ``upload_to`` and ``sas``**</span>
+
+<span class="sd">        &gt;&gt;&gt; import os</span>
+<span class="sd">        &gt;&gt;&gt; from azblobexplorer import AzureBlobDownload</span>
+<span class="sd">        &gt;&gt;&gt; az = AzureBlobDownload(&#39;account name&#39;, &#39;account key&#39;, &#39;container name&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; az.generate_url(&quot;filename.txt&quot;, sas=True)</span>
+<span class="sd">        https://containername.blob.core.windows.net/blobname/filename.txt?se=2019-11-05T16%3A33%3A46Z&amp;sp=w&amp;sv=2019-02-02&amp;sr=b&amp;sig=t%2BpUG2C2FQKp/Hb8SdCsmaZCZxbYXHUedwsquItGx%2BM%3D</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">sas</span><span class="p">:</span>
@@ -177,7 +195,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">container_name</span><span class="p">,</span>
                 <span class="n">blob_name</span><span class="p">,</span>
                 <span class="n">permission</span><span class="o">=</span><span class="n">permission</span><span class="p">,</span>
-                <span class="n">expiry</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">expiry</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">access_time</span><span class="p">)</span>
             <span class="p">)</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_blob_service</span><span class="o">.</span><span class="n">make_blob_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">container_name</span><span class="p">,</span> <span class="n">blob_name</span><span class="p">,</span> <span class="n">sas_token</span><span class="o">=</span><span class="n">token</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -198,6 +216,12 @@
 <span class="sd">        :type permission: azure.storage.blob.BlobPermissions</span>
 <span class="sd">        :return: Blob URL</span>
 <span class="sd">        :rtype: str</span>
+
+<span class="sd">        &gt;&gt;&gt; import os</span>
+<span class="sd">        &gt;&gt;&gt; from azblobexplorer import AzureBlobDownload</span>
+<span class="sd">        &gt;&gt;&gt; az = AzureBlobDownload(&#39;account name&#39;, &#39;account key&#39;, &#39;container name&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; az.generate_url_mime(&quot;filename.zip&quot;, sas=True, mime_type=&quot;application/zip&quot;)</span>
+<span class="sd">        https://containername.blob.core.windows.net/blobname/filename.zip?se=2019-11-05T16%3A33%3A46Z&amp;sp=w&amp;sv=2019-02-02&amp;sr=b&amp;sig=t%2BpUG2C2FQKp/Hb8SdCsmaZCZxbYXHUedwsquItGx%2BM%3D</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">sas</span><span class="p">:</span>
@@ -238,7 +262,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Azure Blob Explorer 1.1.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Azure Blob Explorer 1.2.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>

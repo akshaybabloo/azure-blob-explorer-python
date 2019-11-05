@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Download Contents from Azure Blob &#8212; Azure Blob Explorer 1.1.5 documentation</title>
+    <title>Download Contents from Azure Blob &#8212; Azure Blob Explorer 1.2.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -29,7 +29,7 @@
         <li class="right" >
           <a href="instillation.html" title="Instillation"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Azure Blob Explorer 1.1.5 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Azure Blob Explorer 1.2.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -95,12 +95,13 @@
 
 <dl class="method">
 <dt id="azblobexplorer.AzureBlobDownload.generate_url">
-<code class="sig-name descname">generate_url</code><span class="sig-paren">(</span><em class="sig-param">blob_name: str</em>, <em class="sig-param">permission: azure.storage.blob.models.BlobPermissions = &lt;azure.storage.blob.models.BlobPermissions object&gt;</em>, <em class="sig-param">sas: bool = False</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/azblobexplorer/download.html#AzureBlobDownload.generate_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobDownload.generate_url" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">generate_url</code><span class="sig-paren">(</span><em class="sig-param">blob_name: str</em>, <em class="sig-param">permission: azure.storage.blob.models.BlobPermissions = &lt;azure.storage.blob.models.BlobPermissions object&gt;</em>, <em class="sig-param">sas: bool = False</em>, <em class="sig-param">access_time: int = 1</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/azblobexplorer/download.html#AzureBlobDownload.generate_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobDownload.generate_url" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate’s blob URL. It can also generate Shared Access Signature (SAS) if <code class="docutils literal notranslate"><span class="pre">sas=True</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>blob_name</strong> (<em>str</em>) – Name of the blob</p></li>
+<li><p><strong>access_time</strong> – Time till the URL is valid</p></li>
+<li><p><strong>blob_name</strong> (<em>str</em>) – Name of the blob, this could be a path</p></li>
 <li><p><strong>permission</strong> (<em>azure.storage.blob.BlobPermissions</em>) – Permissions for the data</p></li>
 <li><p><strong>sas</strong> (<em>bool</em>) – Set <code class="docutils literal notranslate"><span class="pre">True</span></code> to generate SAS key</p></li>
 </ul>
@@ -112,6 +113,22 @@
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>
+<p><strong>Example without ``sas``</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">azblobexplorer</span> <span class="k">import</span> <span class="n">AzureBlobDownload</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">az</span> <span class="o">=</span> <span class="n">AzureBlobDownload</span><span class="p">(</span><span class="s1">&#39;account name&#39;</span><span class="p">,</span> <span class="s1">&#39;account key&#39;</span><span class="p">,</span> <span class="s1">&#39;container name&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">az</span><span class="o">.</span><span class="n">generate_url</span><span class="p">(</span><span class="s2">&quot;filename.txt&quot;</span><span class="p">)</span>
+<span class="go">https://containername.blob.core.windows.net/blobname/filename.txt</span>
+</pre></div>
+</div>
+<p><strong>Example with ``upload_to`` and ``sas``</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">azblobexplorer</span> <span class="k">import</span> <span class="n">AzureBlobDownload</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">az</span> <span class="o">=</span> <span class="n">AzureBlobDownload</span><span class="p">(</span><span class="s1">&#39;account name&#39;</span><span class="p">,</span> <span class="s1">&#39;account key&#39;</span><span class="p">,</span> <span class="s1">&#39;container name&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">az</span><span class="o">.</span><span class="n">generate_url</span><span class="p">(</span><span class="s2">&quot;filename.txt&quot;</span><span class="p">,</span> <span class="n">sas</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">https://containername.blob.core.windows.net/blobname/filename.txt?se=2019-11-05T16%3A33%3A46Z&amp;sp=w&amp;sv=2019-02-02&amp;sr=b&amp;sig=t%2BpUG2C2FQKp/Hb8SdCsmaZCZxbYXHUedwsquItGx%2BM%3D</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -134,6 +151,13 @@
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">azblobexplorer</span> <span class="k">import</span> <span class="n">AzureBlobDownload</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">az</span> <span class="o">=</span> <span class="n">AzureBlobDownload</span><span class="p">(</span><span class="s1">&#39;account name&#39;</span><span class="p">,</span> <span class="s1">&#39;account key&#39;</span><span class="p">,</span> <span class="s1">&#39;container name&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">az</span><span class="o">.</span><span class="n">generate_url_mime</span><span class="p">(</span><span class="s2">&quot;filename.zip&quot;</span><span class="p">,</span> <span class="n">sas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mime_type</span><span class="o">=</span><span class="s2">&quot;application/zip&quot;</span><span class="p">)</span>
+<span class="go">https://containername.blob.core.windows.net/blobname/filename.zip?se=2019-11-05T16%3A33%3A46Z&amp;sp=w&amp;sv=2019-02-02&amp;sr=b&amp;sig=t%2BpUG2C2FQKp/Hb8SdCsmaZCZxbYXHUedwsquItGx%2BM%3D</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -218,7 +242,7 @@
         <li class="right" >
           <a href="instillation.html" title="Instillation"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Azure Blob Explorer 1.1.5 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Azure Blob Explorer 1.2.0 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
