@@ -182,6 +182,12 @@ class AzureBlobDownload:
         :type permission: azure.storage.blob.BlobPermissions
         :return: Blob URL
         :rtype: str
+
+        >>> import os
+        >>> from azblobexplorer import AzureBlobDownload
+        >>> az = AzureBlobDownload('account name', 'account key', 'container name')
+        >>> az.generate_url_mime("filename.zip", sas=True, mime_type="application/zip")
+        https://containername.blob.core.windows.net/blobname/filename.zip?se=2019-11-05T16%3A33%3A46Z&sp=w&sv=2019-02-02&sr=b&sig=t%2BpUG2C2FQKp/Hb8SdCsmaZCZxbYXHUedwsquItGx%2BM%3D
         """
 
         if sas:
