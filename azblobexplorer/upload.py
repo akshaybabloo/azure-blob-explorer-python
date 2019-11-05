@@ -1,7 +1,8 @@
 import os
+from datetime import datetime, timedelta
 from pathlib import Path
 
-from azure.storage.blob import BlockBlobService
+from azure.storage.blob import BlockBlobService, BlobPermissions
 
 __all__ = ['AzureBlobUpload']
 
@@ -117,3 +118,29 @@ class AzureBlobUpload:
                     self.upload_file(abs_path, rel_folder_path)
                 else:
                     self.upload_file(abs_path, upload_to + rel_folder_path)
+
+    def generate_url(self, blob_name: str, permission: BlobPermissions = BlobPermissions.WRITE,
+                     sas: bool = False) -> str:
+        """
+        Generate's blob URL. It can also generate Shared Access Signature (SAS) if ``sas=True``.
+
+        :param blob_name: Name of the blob
+        :type blob_name: str
+        :param permission: Permissions for the data
+        :type permission: azure.storage.blob.BlobPermissions
+        :param sas: Set ``True`` to generate SAS key
+        :type sas: bool
+        :return: Blob URL
+        :rtype: str
+        """
+
+        if sas:
+            token = self.block_blob_service.generate_blob_shared_access_signature(
+                self.container_name,
+                blob_name,
+                permission=permission,
+                expiry=datetime.utcnow() + timedelta(hours=1)
+            )
+            return self.block_blob_service.make_blob_url(self.container_name, blob_name, sas_token=token)
+        else:
+            return self.block_blob_service.make_blob_url(self.container_name, blob_name)
