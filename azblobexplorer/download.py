@@ -1,9 +1,8 @@
 import os
 from datetime import datetime, timedelta
-from io import BytesIO
 from pathlib import Path
 
-from azure.storage.blob import BlobServiceClient
+from azure.storage.blob import BlobServiceClient, BlobSasPermissions, generate_blob_sas
 
 from .exceptions import NoBlobsFound
 
@@ -28,7 +27,8 @@ class AzureBlobDownload:
         self.account_key = account_key
         self.container_name = container_name
 
-        block_blob_service = BlobServiceClient.from_connection_string(f"DefaultEndpointsProtocol=https;AccountName={self.account_name};AccountKey={self.account_key};EndpointSuffix=core.windows.net")
+        block_blob_service = BlobServiceClient.from_connection_string(
+            f"DefaultEndpointsProtocol=https;AccountName={self.account_name};AccountKey={self.account_key};EndpointSuffix=core.windows.net")
         self.container_client = block_blob_service.get_container_client(self.container_name)
 
     def download_file(self, blob_name: str, download_to: str = None):
@@ -71,19 +71,19 @@ class AzureBlobDownload:
 
         >>> from azblobexplorer import AzureBlobDownload
         >>> az = AzureBlobDownload('account name', 'account key', 'container name')
-        >>> az.download_folder('some/name/file.txt')
+        >>> az.download_folder('some/folder/name')
         """
 
-        blobs = self.block_blob_service.list_blobs(self.container_name, blob_folder_name)
+        blobs = list(self.container_client.list_blobs(blob_folder_name))
 
-        if blobs.items == 0:
+        if len(blobs) == 0:
             raise NoBlobsFound(
                 "There where 0 blobs found with blob path '{}'".format(blob_folder_name))
 
         if download_to is None:
             for blob in blobs:
-                name = blob.name
-                path = Path(os.path.join(blob_folder_name, name))
+                name = blob['name']
+                path = Path(name)
                 path.parent.mkdir(parents=True, exist_ok=True)
                 _blob = self.read_file(name)
                 file = open(path, 'wb')
@@ -91,8 +91,8 @@ class AzureBlobDownload:
                 file.close()
         else:
             for blob in blobs:
-                name = blob.name
-                path = Path(os.path.join(download_to, blob_folder_name, name))
+                name = blob['name']
+                path = Path(os.path.join(download_to, name))
                 path.parent.mkdir(parents=True, exist_ok=True)
                 _blob = self.read_file(name)
                 file = open(path, 'wb')
@@ -119,89 +119,100 @@ class AzureBlobDownload:
         """
 
         blob_obj = self.container_client.get_blob_client(blob_name)
-        download_blob = blob_obj.
-        print(download_blob.readall())
+        blob_properties = blob_obj.get_blob_properties()
+        download_blob = blob_obj.download_blob()
 
-        # return {
-        #     'file_name': blob_obj.,
-        #     'content': blob_obj.content,
-        #     'file_size_bytes': blob_obj.properties.content_length
-        # }
+        return {
+            'file_name': blob_properties['name'],
+            'content': download_blob.readall(),
+            'file_size_bytes': blob_properties['size']
+        }
 
-    # def generate_url(self, blob_name: str, permission: BlobPermissions = BlobPermissions.READ,
-    #                  sas: bool = False, access_time: int = 1) -> str:
-    #     """
-    #     Generate's blob URL. It can also generate Shared Access Signature (SAS) if ``sas=True``.
-    #
-    #     :param access_time: Time till the URL is valid
-    #     :param blob_name: Name of the blob, this could be a path
-    #     :type blob_name: str
-    #     :param permission: Permissions for the data
-    #     :type permission: azure.storage.blob.BlobPermissions
-    #     :param sas: Set ``True`` to generate SAS key
-    #     :type sas: bool
-    #     :return: Blob URL
-    #     :rtype: str
-    #
-    #     **Example without ``sas``**
-    #
-    #     >>> import os
-    #     >>> from azblobexplorer import AzureBlobDownload
-    #     >>> az = AzureBlobDownload('account name', 'account key', 'container name')
-    #     >>> az.generate_url("filename.txt")
-    #     https://containername.blob.core.windows.net/blobname/filename.txt
-    #
-    #     **Example with ``upload_to`` and ``sas``**
-    #
-    #     >>> import os
-    #     >>> from azblobexplorer import AzureBlobDownload
-    #     >>> az = AzureBlobDownload('account name', 'account key', 'container name')
-    #     >>> az.generate_url("filename.txt", sas=True)
-    #     https://containername.blob.core.windows.net/blobname/filename.txt?se=2019-11-05T16%3A33%3A46Z&sp=w&sv=2019-02-02&sr=b&sig=t%2BpUG2C2FQKp/Hb8SdCsmaZCZxbYXHUedwsquItGx%2BM%3D
-    #     """
-    #
-    #     if sas:
-    #         token = self.block_blob_service.generate_blob_shared_access_signature(
-    #             self.container_name,
-    #             blob_name,
-    #             permission=permission,
-    #             expiry=datetime.utcnow() + timedelta(hours=access_time)
-    #         )
-    #         return self.block_blob_service.make_blob_url(self.container_name, blob_name, sas_token=token)
-    #     else:
-    #         return self.block_blob_service.make_blob_url(self.container_name, blob_name)
-    #
-    # def generate_url_mime(self, blob_name: str, mime_type: str, sas: bool = False,
-    #                       permission: BlobPermissions = BlobPermissions.READ) -> str:
-    #     """
-    #     Generate's blob URL with MIME type. It can also generate Shared Access Signature (SAS) if ``sas=True``.
-    #
-    #     :param blob_name: Name of the blob
-    #     :type blob_name: str
-    #     :param mime_type: MIME type of the application
-    #     :type mime_type: str
-    #     :param sas: Set ``True`` to generate SAS key
-    #     :type sas: bool
-    #     :param permission: Permissions for the data
-    #     :type permission: azure.storage.blob.BlobPermissions
-    #     :return: Blob URL
-    #     :rtype: str
-    #
-    #     >>> import os
-    #     >>> from azblobexplorer import AzureBlobDownload
-    #     >>> az = AzureBlobDownload('account name', 'account key', 'container name')
-    #     >>> az.generate_url_mime("filename.zip", sas=True, mime_type="application/zip")
-    #     https://containername.blob.core.windows.net/blobname/filename.zip?se=2019-11-05T16%3A33%3A46Z&sp=w&sv=2019-02-02&sr=b&sig=t%2BpUG2C2FQKp/Hb8SdCsmaZCZxbYXHUedwsquItGx%2BM%3D
-    #     """
-    #
-    #     if sas:
-    #         token = self.block_blob_service.generate_blob_shared_access_signature(
-    #             self.container_name,
-    #             blob_name,
-    #             permission=permission,
-    #             expiry=datetime.utcnow() + timedelta(hours=1),
-    #             content_type=mime_type
-    #         )
-    #         return self.block_blob_service.make_blob_url(self.container_name, blob_name, sas_token=token)
-    #     else:
-    #         return self.block_blob_service.make_blob_url(self.container_name, blob_name)
+    def generate_url(self, blob_name: str, read: bool = True, add: bool = False,
+                     create: bool = False, write: bool = False, delete: bool = False,
+                     sas: bool = False, access_time: int = 1) -> str:
+        """
+        Generate's blob URL. It can also generate Shared Access Signature (SAS) if ``sas=True``.
+
+        :param write: Write access
+        :param create: Create access
+        :param add: Add access
+        :param read: Read access
+        :param delete: Delete access
+        :param access_time: Time till the URL is valid
+        :param blob_name: Name of the blob, this could be a path
+        :param sas: Set ``True`` to generate SAS key
+        :return: Blob URL
+
+        **Example without ``sas``**
+
+        >>> import os
+        >>> from azblobexplorer import AzureBlobDownload
+        >>> az = AzureBlobDownload('account name', 'account key', 'container name')
+        >>> az.generate_url("filename.txt")
+        https://containername.blob.core.windows.net/blobname/filename.txt
+
+        **Example with ``upload_to`` and ``sas``**
+
+        >>> import os
+        >>> from azblobexplorer import AzureBlobDownload
+        >>> az = AzureBlobDownload('account name', 'account key', 'container name')
+        >>> az.generate_url("filename.txt", sas=True)
+        https://containername.blob.core.windows.net/blobname/filename.txt?se=2019-11-05T16%3A33%3A46Z&sp=w&sv=2019-02-02&sr=b&sig=t%2BpUG2C2FQKp/Hb8SdCsmaZCZxbYXHUedwsquItGx%2BM%3D
+        """
+
+        blob = self.container_client.get_blob_client(blob_name)
+
+        if sas:
+            sas_token = generate_blob_sas(
+                blob.account_name,
+                blob.container_name,
+                blob.blob_name,
+                account_key=blob.credential.account_key,
+                permission=BlobSasPermissions(read, add, create, write, delete),
+                expiry=datetime.utcnow() + timedelta(hours=access_time)
+            )
+            return blob.url + '?' + sas_token
+        else:
+            return blob.url
+
+    def generate_url_mime(self, blob_name: str, mime_type: str, sas: bool = False,
+                          read: bool = True, add: bool = False, create: bool = False,
+                          write: bool = False, delete: bool = False, access_time: int = 1) -> str:
+        """
+        Generate's blob URL with MIME type. It can also generate Shared Access Signature (SAS) if ``sas=True``.
+
+        :param write: Write access
+        :param create: Create access
+        :param add: Add access
+        :param read: Read access
+        :param delete: Delete access
+        :param access_time:
+        :param blob_name: Name of the blob
+        :param access_time: Time till the URL is valid
+        :param mime_type: MIME type of the application
+        :param sas: Set ``True`` to generate SAS key
+        :return: Blob URL
+
+        >>> import os
+        >>> from azblobexplorer import AzureBlobDownload
+        >>> az = AzureBlobDownload('account name', 'account key', 'container name')
+        >>> az.generate_url_mime("filename.zip", sas=True, mime_type="application/zip")
+        https://containername.blob.core.windows.net/blobname/filename.zip?se=2019-11-05T16%3A33%3A46Z&sp=w&sv=2019-02-02&sr=b&sig=t%2BpUG2C2FQKp/Hb8SdCsmaZCZxbYXHUedwsquItGx%2BM%3D
+        """
+
+        blob = self.container_client.get_blob_client(blob_name)
+
+        if sas:
+            sas_token = generate_blob_sas(
+                blob.account_name,
+                blob.container_name,
+                blob.blob_name,
+                account_key=blob.credential.account_key,
+                permission=BlobSasPermissions(read, add, create, write, delete),
+                expiry=datetime.utcnow() + timedelta(hours=access_time),
+                content_type=mime_type
+            )
+            return blob.url + '?' + sas_token
+        else:
+            return blob.url
