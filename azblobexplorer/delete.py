@@ -21,8 +21,9 @@ class AzureBlobDelete(BlobBase):
         >>> az.delete_file('file_name.txt')
         True
         """
+        blob = self.container_client.get_blob_client(file_name)
 
-        self.block_blob_service.delete_blob(self.container_name, file_name)
+        blob.delete_blob()
 
         return True
 
@@ -67,7 +68,7 @@ class AzureBlobDelete(BlobBase):
         True
         """
 
-        blobs = list(self.block_blob_service.list_blobs(self.container_name, blob_folder_name))
+        blobs = list(self.container_client.list_blobs(blob_folder_name))
 
         if len(blobs) == 0:
             raise NoBlobsFound(
@@ -91,6 +92,6 @@ class AzureBlobDelete(BlobBase):
         True
         """
 
-        self.block_blob_service.delete_container(self.container_name)
+        self.container_client.delete_container()
 
         return True

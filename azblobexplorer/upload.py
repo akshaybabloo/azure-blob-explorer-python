@@ -30,10 +30,13 @@ class AzureBlobUpload(BlobBase):
         path = Path(file_path)
 
         if upload_to is None:
-            self.block_blob_service.create_blob_from_path(self.container_name, path.name, path)
+            blob = self.container_client.get_blob_client(path.name)
+            with open(file_path, 'rb') as f:
+                blob.upload_blob(f)
         else:
-            self.block_blob_service.create_blob_from_path(self.container_name,
-                                                          upload_to + path.name, path)
+            blob = self.container_client.get_blob_client(upload_to + path.name)
+            with open(file_path, 'rb') as f:
+                blob.upload_blob(f)
 
     def upload_files(self, files_path: list):
         """
