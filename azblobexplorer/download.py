@@ -12,7 +12,7 @@ class AzureBlobDownload(BlobBase):
     Download a file or folder.
     """
 
-    def download_file(self, blob_name: str, download_to: str = None):
+    def download_file(self, blob_name: str, download_to: str = None, timeout: int = 10):
         """
         Download a file to a location.
 
@@ -20,6 +20,7 @@ class AzureBlobDownload(BlobBase):
             Give a blob path with file name.
         :param download_to:
             Give a local absolute path to download.
+        :param timeout: Request timeout in seconds
         :raises OSError: If the directory for ``download_to`` does not exists
 
         >>> from azblobexplorer import AzureBlobDownload
@@ -27,7 +28,7 @@ class AzureBlobDownload(BlobBase):
         >>> az.download_file('some/name/file.txt')
         """
 
-        file_dict = self.read_file(blob_name)
+        file_dict = self.read_file(blob_name, timeout=timeout)
         file_name = Path(file_dict['file_name']).name
 
         if download_to is None:
@@ -39,7 +40,7 @@ class AzureBlobDownload(BlobBase):
         with open(write_to, 'wb') as file:
             file.write(file_dict['content'])
 
-    def download_folder(self, blob_folder_name: str, download_to: str = None):
+    def download_folder(self, blob_folder_name: str, download_to: str = None, timeout: int = 10):
         """
         Download a blob folder.
 
@@ -47,6 +48,7 @@ class AzureBlobDownload(BlobBase):
             Give a folder name.
         :param download_to:
             Give a local path to download.
+        :param timeout: Request timeout in seconds
         :raises NoBlobsFound: If the blob folder is empty or is not found.
         :raises OSError: If the directory for ``download_to`` does not exists
 
@@ -66,7 +68,7 @@ class AzureBlobDownload(BlobBase):
                 name = blob['name']
                 path = Path(name)
                 path.parent.mkdir(parents=True, exist_ok=True)
-                _blob = self.read_file(name)
+                _blob = self.read_file(name, timeout=timeout)
                 file = open(path, 'wb')
                 file.write(_blob['content'])
                 file.close()
@@ -75,15 +77,16 @@ class AzureBlobDownload(BlobBase):
                 name = blob['name']
                 path = Path(os.path.join(download_to, name))
                 path.parent.mkdir(parents=True, exist_ok=True)
-                _blob = self.read_file(name)
+                _blob = self.read_file(name, timeout=timeout)
                 file = open(path, 'wb')
                 file.write(_blob['content'])
                 file.close()
 
-    def read_file(self, blob_name: str) -> dict:
+    def read_file(self, blob_name: str, timeout: int = 10) -> dict:
         """
         Read a file.
 
+        :param timeout: Request timeout in seconds
         :param blob_name:
             Give a file name.
         :return:
@@ -101,7 +104,7 @@ class AzureBlobDownload(BlobBase):
 
         blob_obj = self.container_client.get_blob_client(blob_name)
         blob_properties = blob_obj.get_blob_properties()
-        download_blob = blob_obj.download_blob()
+        download_blob = blob_obj.download_blob(timeout=timeout)
 
         return {
             'file_name': blob_properties['name'],

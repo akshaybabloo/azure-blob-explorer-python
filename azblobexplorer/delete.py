@@ -7,12 +7,13 @@ class AzureBlobDelete(BlobBase):
     Delete file and folder from Azure blob storage.
     """
 
-    def delete_file(self, file_name: str) -> bool:
+    def delete_file(self, file_name: str, timeout: int = 10) -> bool:
         """
         Delete a file from Azure Storage Blob.
 
         :param file_name:
-            Give a file name to delete/
+            Give a file name to delete
+        :param timeout: Request timeout in seconds
         :rtype: bool
         :returns: ``True`` if a file is deleted.
 
@@ -23,16 +24,17 @@ class AzureBlobDelete(BlobBase):
         """
         blob = self.container_client.get_blob_client(file_name)
 
-        blob.delete_blob()
+        blob.delete_blob(timeout=timeout)
 
         return True
 
-    def delete_files(self, file_names: list) -> bool:
+    def delete_files(self, file_names: list, timeout: int = 10) -> bool:
         """
         Delete a list of file from Azure Storage Blob.
 
         :param file_names:
-            Give a list of file names to delete/
+            Give a list of file names to delete
+        :param timeout: Request timeout in seconds
         :rtype: bool
         :returns: ``True`` if files are deleted.
 
@@ -48,16 +50,17 @@ class AzureBlobDelete(BlobBase):
         """
 
         for file in file_names:
-            self.delete_file(file)
+            self.delete_file(file, timeout=timeout)
 
         return True
 
-    def delete_folder(self, blob_folder_name: str) -> bool:
+    def delete_folder(self, blob_folder_name: str, timeout: int = 10) -> bool:
         """
         Delete a folder from Azure Storage Blob.
 
         :param blob_folder_name:
             Give a folder name to delete
+        :param timeout: Request timeout in seconds
         :rtype: bool
         :returns: ``True`` if a folder is deleted.
         :raises NoBlobsFound: If the blob folder is empty or is not found.
@@ -75,14 +78,15 @@ class AzureBlobDelete(BlobBase):
                 "There where 0 blobs found with blob path '{}'".format(blob_folder_name))
 
         for blob in blobs:
-            self.delete_file(blob.name)
+            self.delete_file(blob.name, timeout=timeout)
 
         return True
 
-    def delete_container(self) -> bool:
+    def delete_container(self, timeout: int = 10) -> bool:
         """
         Delete the current container.
 
+        :param timeout: Request timeout in seconds
         :rtype: bool
         :return: Returns ``True`` is the current container is deleted.
 
@@ -92,6 +96,6 @@ class AzureBlobDelete(BlobBase):
         True
         """
 
-        self.container_client.delete_container()
+        self.container_client.delete_container(timeout=10)
 
         return True

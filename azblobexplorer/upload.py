@@ -11,7 +11,7 @@ class AzureBlobUpload(BlobBase):
     Upload a file or a folder.
     """
 
-    def upload_file(self, file_path: str, upload_to: str = None):
+    def upload_file(self, file_path: str, upload_to: str = None, timeout: int = 10):
         """
         Upload a file to a given blob path.
 
@@ -19,6 +19,7 @@ class AzureBlobUpload(BlobBase):
             Give the path to upload.
         :param file_path:
             Absolute path of the file to upload.
+        :param timeout: Request timeout in seconds
 
         >>> from azblobexplorer import AzureBlobUpload
         >>> import os
@@ -32,18 +33,19 @@ class AzureBlobUpload(BlobBase):
         if upload_to is None:
             blob = self.container_client.get_blob_client(path.name)
             with open(file_path, 'rb') as f:
-                blob.upload_blob(f)
+                blob.upload_blob(f, timeout=timeout)
         else:
             blob = self.container_client.get_blob_client(upload_to + path.name)
             with open(file_path, 'rb') as f:
-                blob.upload_blob(f)
+                blob.upload_blob(f, timeout=timeout)
 
-    def upload_files(self, files_path: list):
+    def upload_files(self, files_path: list, timeout: int = 10):
         """
         Upload a list of files.
 
         :param list files_path:
             A list of files to upload.
+        :param timeout: Request timeout in seconds
 
         >>> import os
         >>> from azblobexplorer import AzureBlobUpload
@@ -59,11 +61,11 @@ class AzureBlobUpload(BlobBase):
 
         for path in files_path:
             if isinstance(path, list):
-                self.upload_file(path[0], path[1])
+                self.upload_file(path[0], path[1], timeout=timeout)
             else:
-                self.upload_file(path)
+                self.upload_file(path, timeout=timeout)
 
-    def upload_folder(self, folder_path: str, upload_to: str = None):
+    def upload_folder(self, folder_path: str, upload_to: str = None, timeout: int = 10):
         """
         Upload a folder to a given blob path.
 
@@ -71,6 +73,7 @@ class AzureBlobUpload(BlobBase):
             Give the path to upload. Default ``None``.
         :param folder_path:
             Absolute path of the folder to upload.
+        :param timeout: Request timeout in seconds
 
         **Example without "upload_to"**
 
@@ -102,6 +105,6 @@ class AzureBlobUpload(BlobBase):
                 rel_folder_path = os.path.join(root_name, rel_dir) + '/'
                 abs_path = os.path.join(_dir, file_name)
                 if upload_to is None:
-                    self.upload_file(abs_path, rel_folder_path)
+                    self.upload_file(abs_path, rel_folder_path, timeout=timeout)
                 else:
-                    self.upload_file(abs_path, upload_to + rel_folder_path)
+                    self.upload_file(abs_path, upload_to + rel_folder_path, timeout=timeout)
