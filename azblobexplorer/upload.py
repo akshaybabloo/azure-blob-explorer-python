@@ -1,31 +1,15 @@
 import os
-from datetime import datetime, timedelta
 from pathlib import Path
-
-from azure.storage.blob import BlockBlobService, BlobPermissions
 
 __all__ = ['AzureBlobUpload']
 
+from .base import BlobBase
 
-class AzureBlobUpload:
+
+class AzureBlobUpload(BlobBase):
     """
     Upload a file or a folder.
     """
-
-    def __init__(self, account_name: str, account_key: str, container_name: str):
-        """
-        :param account_name:
-            Azure storage account name.
-        :param account_key:
-            Azure storage key.
-        :param container_name:
-            Azure storage container name, URL will be added automatically.
-        """
-        self.account_name = account_name
-        self.account_key = account_key
-        self.container_name = container_name
-
-        self.block_blob_service = BlockBlobService(self.account_name, self.account_key)
 
     def upload_file(self, file_path: str, upload_to: str = None):
         """
@@ -118,45 +102,3 @@ class AzureBlobUpload:
                     self.upload_file(abs_path, rel_folder_path)
                 else:
                     self.upload_file(abs_path, upload_to + rel_folder_path)
-
-    def generate_url(self, blob_name: str, permission: BlobPermissions = BlobPermissions.WRITE,
-                     sas: bool = False, access_time: int = 1) -> str:
-        """
-        Generate's blob URL to upload a file. It can also generate Shared Access Signature (SAS) if ``sas=True``.
-
-        :param blob_name: Name of the file that you are uploading, this can also be a path with file name
-        :param access_time: Time till the URL is valid
-        :param permission: Permissions for the data
-        :type permission: azure.storage.blob.BlobPermissions
-        :param sas: Set ``True`` to generate SAS key
-        :type sas: bool
-        :return: Blob URL
-        :rtype: str
-
-        **Example without ``sas``**
-
-        >>> import os
-        >>> from azblobexplorer import AzureBlobUpload
-        >>> az = AzureBlobUpload('account name', 'account key', 'container name')
-        >>> az.generate_url("filename.txt")
-        https://containername.blob.core.windows.net/blobname/filename.txt
-
-        **Example with ``sas``**
-
-        >>> import os
-        >>> from azblobexplorer import AzureBlobUpload
-        >>> az = AzureBlobUpload('account name', 'account key', 'container name')
-        >>> az.generate_url("path/to/filename.txt", sas=True)
-        https://containername.blob.core.windows.net/blobname/path/to/upload/path/to/filename.txt?se=2019-11-05T16%3A33%3A46Z&sp=w&sv=2019-02-02&sr=b&sig=t%2BpUG2C2FQKp/Hb8SdCsmaZCZxbYXHUedwsquItGx%2BM%3D
-        """
-
-        if sas:
-            token = self.block_blob_service.generate_blob_shared_access_signature(
-                self.container_name,
-                blob_name,
-                permission=permission,
-                expiry=datetime.utcnow() + timedelta(hours=access_time)
-            )
-            return self.block_blob_service.make_blob_url(self.container_name, blob_name, sas_token=token)
-        else:
-            return self.block_blob_service.make_blob_url(self.container_name, blob_name)

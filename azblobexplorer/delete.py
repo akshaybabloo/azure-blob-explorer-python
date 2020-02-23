@@ -1,26 +1,11 @@
-from azure.storage.blob import BlockBlobService
-
+from .base import BlobBase
 from .exceptions import NoBlobsFound
 
 
-class AzureBlobDelete:
+class AzureBlobDelete(BlobBase):
     """
     Delete file and folder from Azure blob storage.
     """
-    def __init__(self, account_name: str, account_key: str, container_name: str):
-        """
-        :param account_name:
-            Azure storage account name.
-        :param account_key:
-            Azure storage key.
-        :param container_name:
-            Azure storage container name, URL will be added automatically.
-        """
-        self.account_name = account_name
-        self.account_key = account_key
-        self.container_name = container_name
-
-        self.block_blob_service = BlockBlobService(self.account_name, self.account_key)
 
     def delete_file(self, file_name: str) -> bool:
         """
