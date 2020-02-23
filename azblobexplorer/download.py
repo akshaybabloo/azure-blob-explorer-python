@@ -16,11 +16,14 @@ class AzureBlobDownload(BlobBase):
         """
         Download a file to a location.
 
-        :param blob_name:
+        :param str blob_name:
             Give a blob path with file name.
-        :param download_to:
+        :param str download_to:
             Give a local absolute path to download.
-        :param timeout: Request timeout in seconds
+        :param int timeout: Request timeout in seconds
+
+            .. versionadded:: 2.0
+
         :raises OSError: If the directory for ``download_to`` does not exists
 
         >>> from azblobexplorer import AzureBlobDownload
@@ -44,11 +47,14 @@ class AzureBlobDownload(BlobBase):
         """
         Download a blob folder.
 
-        :param blob_folder_name:
+        :param str blob_folder_name:
             Give a folder name.
-        :param download_to:
+        :param str download_to:
             Give a local path to download.
-        :param timeout: Request timeout in seconds
+        :param int timeout: Request timeout in seconds
+
+            .. versionadded:: 2.0
+
         :raises NoBlobsFound: If the blob folder is empty or is not found.
         :raises OSError: If the directory for ``download_to`` does not exists
 
@@ -86,9 +92,13 @@ class AzureBlobDownload(BlobBase):
         """
         Read a file.
 
-        :param timeout: Request timeout in seconds
-        :param blob_name:
+        :param int timeout: Request timeout in seconds
+
+            .. versionadded:: 2.0
+
+        :param str blob_name:
             Give a file name.
+        :rtype: dict
         :return:
             Returns a dictionary of name, content,
 

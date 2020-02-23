@@ -4,13 +4,18 @@ from azure.storage.blob import BlobServiceClient, BlobSasPermissions, generate_b
 
 
 class BlobBase:
+    """
+
+    .. versionadded:: 2.0
+
+    """
     def __init__(self, account_name: str, account_key: str, container_name: str):
         """
-        :param account_name:
+        :param str account_name:
             Azure storage account name.
-        :param account_key:
+        :param str account_key:
             Azure storage key.
-        :param container_name:
+        :param str container_name:
             Azure storage container name, URL will be added automatically.
         """
         self.account_name = account_name
@@ -27,14 +32,29 @@ class BlobBase:
         """
         Generate's blob URL. It can also generate Shared Access Signature (SAS) if ``sas=True``.
 
-        :param write: Write access
-        :param create: Create access
-        :param add: Add access
-        :param read: Read access
-        :param delete: Delete access
-        :param access_time: Time till the URL is valid
-        :param blob_name: Name of the blob, this could be a path
-        :param sas: Set ``True`` to generate SAS key
+        :param bool write: Write access
+
+            .. versionadded:: 2.0
+
+        :param bool create: Create access
+
+            .. versionadded:: 2.0
+
+        :param bool add: Add access
+
+            .. versionadded:: 2.0
+
+        :param bool read: Read access
+
+            .. versionadded:: 2.0
+
+        :param bool delete: Delete access
+
+            .. versionadded:: 2.0
+
+        :param int access_time: Time till the URL is valid
+        :param str blob_name: Name of the blob, this could be a path
+        :param bool sas: Set ``True`` to generate SAS key
         :return: Blob URL
 
         **Example without ``sas``**
@@ -75,16 +95,31 @@ class BlobBase:
         """
         Generate's blob URL with MIME type. It can also generate Shared Access Signature (SAS) if ``sas=True``.
 
-        :param write: Write access
-        :param create: Create access
-        :param add: Add access
-        :param read: Read access
-        :param delete: Delete access
-        :param access_time:
-        :param blob_name: Name of the blob
-        :param access_time: Time till the URL is valid
-        :param mime_type: MIME type of the application
-        :param sas: Set ``True`` to generate SAS key
+        :param bool write: Write access
+
+            .. versionadded:: 2.0
+
+        :param bool create: Create access
+
+            .. versionadded:: 2.0
+
+        :param bool add: Add access
+
+            .. versionadded:: 2.0
+
+        :param bool read: Read access
+
+            .. versionadded:: 2.0
+
+        :param bool delete: Delete access
+
+            .. versionadded:: 2.0
+
+        :param int access_time: Time till the URL is valid
+        :param str blob_name: Name of the blob
+        :param int access_time: Time till the URL is valid
+        :param str mime_type: MIME type of the application
+        :param bool sas: Set ``True`` to generate SAS key
         :return: Blob URL
 
         >>> import os

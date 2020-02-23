@@ -11,9 +11,12 @@ class AzureBlobDelete(BlobBase):
         """
         Delete a file from Azure Storage Blob.
 
-        :param file_name:
+        :param str file_name:
             Give a file name to delete
-        :param timeout: Request timeout in seconds
+        :param int timeout: Request timeout in seconds
+
+            .. versionadded:: 2.0
+
         :rtype: bool
         :returns: ``True`` if a file is deleted.
 
@@ -32,9 +35,12 @@ class AzureBlobDelete(BlobBase):
         """
         Delete a list of file from Azure Storage Blob.
 
-        :param file_names:
+        :param str file_names:
             Give a list of file names to delete
-        :param timeout: Request timeout in seconds
+        :param int timeout: Request timeout in seconds
+
+            .. versionadded:: 2.0
+
         :rtype: bool
         :returns: ``True`` if files are deleted.
 
@@ -58,9 +64,12 @@ class AzureBlobDelete(BlobBase):
         """
         Delete a folder from Azure Storage Blob.
 
-        :param blob_folder_name:
+        :param str blob_folder_name:
             Give a folder name to delete
-        :param timeout: Request timeout in seconds
+        :param int timeout: Request timeout in seconds
+
+            .. versionadded:: 2.0
+
         :rtype: bool
         :returns: ``True`` if a folder is deleted.
         :raises NoBlobsFound: If the blob folder is empty or is not found.
@@ -86,7 +95,10 @@ class AzureBlobDelete(BlobBase):
         """
         Delete the current container.
 
-        :param timeout: Request timeout in seconds
+        :param int timeout: Request timeout in seconds
+
+            .. versionadded:: 2.0
+
         :rtype: bool
         :return: Returns ``True`` is the current container is deleted.
 
