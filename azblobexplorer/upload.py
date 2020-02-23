@@ -1,9 +1,11 @@
 import os
 from pathlib import Path
 
-__all__ = ['AzureBlobUpload']
+from typing import List
 
 from .base import BlobBase
+
+__all__ = ['AzureBlobUpload']
 
 
 class AzureBlobUpload(BlobBase):
@@ -15,11 +17,13 @@ class AzureBlobUpload(BlobBase):
         """
         Upload a file to a given blob path.
 
-        :param upload_to:
+        :param str upload_to:
             Give the path to upload.
-        :param file_path:
+        :param str file_path:
             Absolute path of the file to upload.
-        :param timeout: Request timeout in seconds
+        :param int timeout: Request timeout in seconds
+
+            .. versionadded:: 2.0
 
         >>> from azblobexplorer import AzureBlobUpload
         >>> import os
@@ -39,13 +43,15 @@ class AzureBlobUpload(BlobBase):
             with open(file_path, 'rb') as f:
                 blob.upload_blob(f, timeout=timeout)
 
-    def upload_files(self, files_path: list, timeout: int = 10):
+    def upload_files(self, files_path: List[str], timeout: int = 10):
         """
         Upload a list of files.
 
-        :param list files_path:
+        :param list(str) files_path:
             A list of files to upload.
-        :param timeout: Request timeout in seconds
+        :param int timeout: Request timeout in seconds
+
+            .. versionadded:: 2.0
 
         >>> import os
         >>> from azblobexplorer import AzureBlobUpload
@@ -69,11 +75,13 @@ class AzureBlobUpload(BlobBase):
         """
         Upload a folder to a given blob path.
 
-        :param upload_to:
+        :param str upload_to:
             Give the path to upload. Default ``None``.
-        :param folder_path:
+        :param str folder_path:
             Absolute path of the folder to upload.
-        :param timeout: Request timeout in seconds
+        :param int timeout: Request timeout in seconds
+
+            .. versionadded:: 2.0
 
         **Example without "upload_to"**
 
