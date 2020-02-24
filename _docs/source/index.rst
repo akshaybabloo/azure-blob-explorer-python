@@ -18,7 +18,7 @@ has a CLI that can be used in Docker or on your local system to pre-download the
    download
    upload
    delete
-   cli
+   #cli
 
 
 Indices and tables
