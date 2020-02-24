@@ -4,14 +4,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Upload Contents to Azure Blob &#8212; Azure Blob Explorer 1.2.0 documentation</title>
+    <title>Upload Contents to Azure Blob &#8212; Azure Blob Explorer 2.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Deleting Contents from Azure Blob" href="delete.html" />
@@ -29,7 +29,7 @@
         <li class="right" >
           <a href="download.html" title="Download Contents from Azure Blob"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Azure Blob Explorer 1.2.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Azure Blob Explorer 2.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -40,63 +40,143 @@
             
   <div class="section" id="upload-contents-to-azure-blob">
 <h1>Upload Contents to Azure Blob<a class="headerlink" href="#upload-contents-to-azure-blob" title="Permalink to this headline">¶</a></h1>
+<p>Uploading files made easy.</p>
 <div class="section" id="package-content">
 <h2>Package Content<a class="headerlink" href="#package-content" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="azblobexplorer.AzureBlobUpload">
 <em class="property">class </em><code class="sig-prename descclassname">azblobexplorer.</code><code class="sig-name descname">AzureBlobUpload</code><span class="sig-paren">(</span><em class="sig-param">account_name: str</em>, <em class="sig-param">account_key: str</em>, <em class="sig-param">container_name: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/azblobexplorer/upload.html#AzureBlobUpload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobUpload" title="Permalink to this definition">¶</a></dt>
-<dd><p>Upload a file or a folder.</p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">azblobexplorer.base.BlobBase</span></code></p>
+<p>Upload a file or a folder.</p>
 <dl class="method">
 <dt id="azblobexplorer.AzureBlobUpload.generate_url">
-<code class="sig-name descname">generate_url</code><span class="sig-paren">(</span><em class="sig-param">blob_name: str</em>, <em class="sig-param">permission: azure.storage.blob.models.BlobPermissions = &lt;azure.storage.blob.models.BlobPermissions object&gt;</em>, <em class="sig-param">sas: bool = False</em>, <em class="sig-param">access_time: int = 1</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/azblobexplorer/upload.html#AzureBlobUpload.generate_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobUpload.generate_url" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate’s blob URL to upload a file. It can also generate Shared Access Signature (SAS) if <code class="docutils literal notranslate"><span class="pre">sas=True</span></code>.</p>
+<code class="sig-name descname">generate_url</code><span class="sig-paren">(</span><em class="sig-param">blob_name: str</em>, <em class="sig-param">read: bool = True</em>, <em class="sig-param">add: bool = False</em>, <em class="sig-param">create: bool = False</em>, <em class="sig-param">write: bool = False</em>, <em class="sig-param">delete: bool = False</em>, <em class="sig-param">sas: bool = False</em>, <em class="sig-param">access_time: int = 1</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#azblobexplorer.AzureBlobUpload.generate_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate’s blob URL. It can also generate Shared Access Signature (SAS) if <code class="docutils literal notranslate"><span class="pre">sas=True</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>blob_name</strong> – Name of the file that you are uploading, this can also be a path with file name</p></li>
-<li><p><strong>access_time</strong> – Time till the URL is valid</p></li>
-<li><p><strong>permission</strong> (<em>azure.storage.blob.BlobPermissions</em>) – Permissions for the data</p></li>
+<li><p><strong>write</strong> (<em>bool</em>) – <p>Write access</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.0.</span></p>
+</div>
+</p></li>
+<li><p><strong>create</strong> (<em>bool</em>) – <p>Create access</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.0.</span></p>
+</div>
+</p></li>
+<li><p><strong>add</strong> (<em>bool</em>) – <p>Add access</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.0.</span></p>
+</div>
+</p></li>
+<li><p><strong>read</strong> (<em>bool</em>) – <p>Read access</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.0.</span></p>
+</div>
+</p></li>
+<li><p><strong>delete</strong> (<em>bool</em>) – <p>Delete access</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.0.</span></p>
+</div>
+</p></li>
+<li><p><strong>access_time</strong> (<em>int</em>) – Time till the URL is valid</p></li>
+<li><p><strong>blob_name</strong> (<em>str</em>) – Name of the blob, this could be a path</p></li>
 <li><p><strong>sas</strong> (<em>bool</em>) – Set <code class="docutils literal notranslate"><span class="pre">True</span></code> to generate SAS key</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Blob URL</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
 </dl>
 <p><strong>Example without ``sas``</strong></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">azblobexplorer</span> <span class="k">import</span> <span class="n">AzureBlobUpload</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">az</span> <span class="o">=</span> <span class="n">AzureBlobUpload</span><span class="p">(</span><span class="s1">&#39;account name&#39;</span><span class="p">,</span> <span class="s1">&#39;account key&#39;</span><span class="p">,</span> <span class="s1">&#39;container name&#39;</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">azblobexplorer</span> <span class="kn">import</span> <span class="n">AzureBlobDownload</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">az</span> <span class="o">=</span> <span class="n">AzureBlobDownload</span><span class="p">(</span><span class="s1">&#39;account name&#39;</span><span class="p">,</span> <span class="s1">&#39;account key&#39;</span><span class="p">,</span> <span class="s1">&#39;container name&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">az</span><span class="o">.</span><span class="n">generate_url</span><span class="p">(</span><span class="s2">&quot;filename.txt&quot;</span><span class="p">)</span>
 <span class="go">https://containername.blob.core.windows.net/blobname/filename.txt</span>
 </pre></div>
 </div>
-<p><strong>Example with ``sas``</strong></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">azblobexplorer</span> <span class="k">import</span> <span class="n">AzureBlobUpload</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">az</span> <span class="o">=</span> <span class="n">AzureBlobUpload</span><span class="p">(</span><span class="s1">&#39;account name&#39;</span><span class="p">,</span> <span class="s1">&#39;account key&#39;</span><span class="p">,</span> <span class="s1">&#39;container name&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">az</span><span class="o">.</span><span class="n">generate_url</span><span class="p">(</span><span class="s2">&quot;path/to/filename.txt&quot;</span><span class="p">,</span> <span class="n">sas</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="go">https://containername.blob.core.windows.net/blobname/path/to/upload/path/to/filename.txt?se=2019-11-05T16%3A33%3A46Z&amp;sp=w&amp;sv=2019-02-02&amp;sr=b&amp;sig=t%2BpUG2C2FQKp/Hb8SdCsmaZCZxbYXHUedwsquItGx%2BM%3D</span>
+<p><strong>Example with ``upload_to`` and ``sas``</strong></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">azblobexplorer</span> <span class="kn">import</span> <span class="n">AzureBlobDownload</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">az</span> <span class="o">=</span> <span class="n">AzureBlobDownload</span><span class="p">(</span><span class="s1">&#39;account name&#39;</span><span class="p">,</span> <span class="s1">&#39;account key&#39;</span><span class="p">,</span> <span class="s1">&#39;container name&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">az</span><span class="o">.</span><span class="n">generate_url</span><span class="p">(</span><span class="s2">&quot;filename.txt&quot;</span><span class="p">,</span> <span class="n">sas</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">https://containername.blob.core.windows.net/blobname/filename.txt?se=2019-11-05T16%3A33%3A46Z&amp;sp=w&amp;sv=2019-02-02&amp;sr=b&amp;sig=t%2BpUG2C2FQKp/Hb8SdCsmaZCZxbYXHUedwsquItGx%2BM%3D</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="azblobexplorer.AzureBlobUpload.generate_url_mime">
+<code class="sig-name descname">generate_url_mime</code><span class="sig-paren">(</span><em class="sig-param">blob_name: str</em>, <em class="sig-param">mime_type: str</em>, <em class="sig-param">sas: bool = False</em>, <em class="sig-param">read: bool = True</em>, <em class="sig-param">add: bool = False</em>, <em class="sig-param">create: bool = False</em>, <em class="sig-param">write: bool = False</em>, <em class="sig-param">delete: bool = False</em>, <em class="sig-param">access_time: int = 1</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#azblobexplorer.AzureBlobUpload.generate_url_mime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate’s blob URL with MIME type. It can also generate Shared Access Signature (SAS) if <code class="docutils literal notranslate"><span class="pre">sas=True</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>write</strong> (<em>bool</em>) – <p>Write access</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.0.</span></p>
+</div>
+</p></li>
+<li><p><strong>create</strong> (<em>bool</em>) – <p>Create access</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.0.</span></p>
+</div>
+</p></li>
+<li><p><strong>add</strong> (<em>bool</em>) – <p>Add access</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.0.</span></p>
+</div>
+</p></li>
+<li><p><strong>read</strong> (<em>bool</em>) – <p>Read access</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.0.</span></p>
+</div>
+</p></li>
+<li><p><strong>delete</strong> (<em>bool</em>) – <p>Delete access</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.0.</span></p>
+</div>
+</p></li>
+<li><p><strong>access_time</strong> (<em>int</em>) – Time till the URL is valid</p></li>
+<li><p><strong>blob_name</strong> (<em>str</em>) – Name of the blob</p></li>
+<li><p><strong>access_time</strong> – Time till the URL is valid</p></li>
+<li><p><strong>mime_type</strong> (<em>str</em>) – MIME type of the application</p></li>
+<li><p><strong>sas</strong> (<em>bool</em>) – Set <code class="docutils literal notranslate"><span class="pre">True</span></code> to generate SAS key</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Blob URL</p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">azblobexplorer</span> <span class="kn">import</span> <span class="n">AzureBlobDownload</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">az</span> <span class="o">=</span> <span class="n">AzureBlobDownload</span><span class="p">(</span><span class="s1">&#39;account name&#39;</span><span class="p">,</span> <span class="s1">&#39;account key&#39;</span><span class="p">,</span> <span class="s1">&#39;container name&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">az</span><span class="o">.</span><span class="n">generate_url_mime</span><span class="p">(</span><span class="s2">&quot;filename.zip&quot;</span><span class="p">,</span> <span class="n">sas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mime_type</span><span class="o">=</span><span class="s2">&quot;application/zip&quot;</span><span class="p">)</span>
+<span class="go">https://containername.blob.core.windows.net/blobname/filename.zip?se=2019-11-05T16%3A33%3A46Z&amp;sp=w&amp;sv=2019-02-02&amp;sr=b&amp;sig=t%2BpUG2C2FQKp/Hb8SdCsmaZCZxbYXHUedwsquItGx%2BM%3D</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="method">
 <dt id="azblobexplorer.AzureBlobUpload.upload_file">
-<code class="sig-name descname">upload_file</code><span class="sig-paren">(</span><em class="sig-param">file_path: str</em>, <em class="sig-param">upload_to: str = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/azblobexplorer/upload.html#AzureBlobUpload.upload_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobUpload.upload_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">upload_file</code><span class="sig-paren">(</span><em class="sig-param">file_path: str</em>, <em class="sig-param">upload_to: str = None</em>, <em class="sig-param">timeout: int = 10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/azblobexplorer/upload.html#AzureBlobUpload.upload_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobUpload.upload_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Upload a file to a given blob path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>upload_to</strong> – Give the path to upload.</p></li>
-<li><p><strong>file_path</strong> – Absolute path of the file to upload.</p></li>
+<li><p><strong>upload_to</strong> (<em>str</em>) – Give the path to upload.</p></li>
+<li><p><strong>file_path</strong> (<em>str</em>) – Absolute path of the file to upload.</p></li>
+<li><p><strong>timeout</strong> (<em>int</em>) – <p>Request timeout in seconds</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.0.</span></p>
+</div>
+</p></li>
 </ul>
 </dd>
 </dl>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">azblobexplorer</span> <span class="k">import</span> <span class="n">AzureBlobUpload</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">azblobexplorer</span> <span class="kn">import</span> <span class="n">AzureBlobUpload</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">az</span> <span class="o">=</span> <span class="n">AzureBlobUpload</span><span class="p">(</span><span class="s1">&#39;account name&#39;</span><span class="p">,</span> <span class="s1">&#39;account key&#39;</span><span class="p">,</span> <span class="s1">&#39;container name&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">here</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span>
@@ -107,15 +187,22 @@
 
 <dl class="method">
 <dt id="azblobexplorer.AzureBlobUpload.upload_files">
-<code class="sig-name descname">upload_files</code><span class="sig-paren">(</span><em class="sig-param">files_path: list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/azblobexplorer/upload.html#AzureBlobUpload.upload_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobUpload.upload_files" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">upload_files</code><span class="sig-paren">(</span><em class="sig-param">files_path: List[str], timeout: int = 10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/azblobexplorer/upload.html#AzureBlobUpload.upload_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobUpload.upload_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Upload a list of files.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>files_path</strong> (<em>list</em>) – A list of files to upload.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>files_path</strong> (<em>list</em><em>(</em><em>str</em><em>)</em>) – A list of files to upload.</p></li>
+<li><p><strong>timeout</strong> (<em>int</em>) – <p>Request timeout in seconds</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.0.</span></p>
+</div>
+</p></li>
+</ul>
 </dd>
 </dl>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">azblobexplorer</span> <span class="k">import</span> <span class="n">AzureBlobUpload</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">azblobexplorer</span> <span class="kn">import</span> <span class="n">AzureBlobUpload</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">az</span> <span class="o">=</span> <span class="n">AzureBlobUpload</span><span class="p">(</span><span class="s1">&#39;account name&#39;</span><span class="p">,</span> <span class="s1">&#39;account key&#39;</span><span class="p">,</span> <span class="s1">&#39;container name&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">here</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">path_list</span> <span class="o">=</span> <span class="p">[</span>
@@ -130,27 +217,32 @@
 
 <dl class="method">
 <dt id="azblobexplorer.AzureBlobUpload.upload_folder">
-<code class="sig-name descname">upload_folder</code><span class="sig-paren">(</span><em class="sig-param">folder_path: str</em>, <em class="sig-param">upload_to: str = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/azblobexplorer/upload.html#AzureBlobUpload.upload_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobUpload.upload_folder" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">upload_folder</code><span class="sig-paren">(</span><em class="sig-param">folder_path: str</em>, <em class="sig-param">upload_to: str = None</em>, <em class="sig-param">timeout: int = 10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/azblobexplorer/upload.html#AzureBlobUpload.upload_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#azblobexplorer.AzureBlobUpload.upload_folder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Upload a folder to a given blob path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>upload_to</strong> – Give the path to upload. Default <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
-<li><p><strong>folder_path</strong> – Absolute path of the folder to upload.</p></li>
+<li><p><strong>upload_to</strong> (<em>str</em>) – Give the path to upload. Default <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>folder_path</strong> (<em>str</em>) – Absolute path of the folder to upload.</p></li>
+<li><p><strong>timeout</strong> (<em>int</em>) – <p>Request timeout in seconds</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.0.</span></p>
+</div>
+</p></li>
 </ul>
 </dd>
 </dl>
 <p><strong>Example without “upload_to”</strong></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">azblobexplorer</span> <span class="k">import</span> <span class="n">AzureBlobUpload</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">azblobexplorer</span> <span class="kn">import</span> <span class="n">AzureBlobUpload</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">here</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">az</span> <span class="o">=</span> <span class="n">AzureBlobUpload</span><span class="p">(</span><span class="s1">&#39;account name&#39;</span><span class="p">,</span> <span class="s1">&#39;account key&#39;</span><span class="p">,</span> <span class="s1">&#39;container name&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">az</span><span class="o">.</span><span class="n">upload_folder</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span> <span class="s1">&#39;folder_name&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
 <p><strong>Example with “upload_to”</strong></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">azblobexplorer</span> <span class="k">import</span> <span class="n">AzureBlobUpload</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">azblobexplorer</span> <span class="kn">import</span> <span class="n">AzureBlobUpload</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">here</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">az</span> <span class="o">=</span> <span class="n">AzureBlobUpload</span><span class="p">(</span><span class="s1">&#39;account name&#39;</span><span class="p">,</span> <span class="s1">&#39;account key&#39;</span><span class="p">,</span> <span class="s1">&#39;container name&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">az</span><span class="o">.</span><span class="n">upload_folder</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span> <span class="s1">&#39;folder_name&#39;</span><span class="p">),</span> <span class="n">upload_to</span><span class="o">=</span><span class="s2">&quot;my/blob/location/&quot;</span><span class="p">)</span>
@@ -199,7 +291,7 @@
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -216,12 +308,12 @@
         <li class="right" >
           <a href="download.html" title="Download Contents from Azure Blob"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Azure Blob Explorer 1.2.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Azure Blob Explorer 2.0 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, Akshay Raj Gollahalli.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
     </div>
   </body>
 </html>

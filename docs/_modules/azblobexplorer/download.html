@@ -4,14 +4,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>azblobexplorer.download &#8212; Azure Blob Explorer 1.2.0 documentation</title>
+    <title>azblobexplorer.download &#8212; Azure Blob Explorer 2.0 documentation</title>
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
@@ -21,7 +21,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Azure Blob Explorer 1.2.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Azure Blob Explorer 2.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -33,44 +33,31 @@
             
   <h1>Source code for azblobexplorer.download</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="k">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">from</span> <span class="nn">azure.storage.blob</span> <span class="k">import</span> <span class="n">BlockBlobService</span><span class="p">,</span> <span class="n">BlobPermissions</span>
-
-<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">NoBlobsFound</span>
+<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">BlobBase</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">NoBlobsFound</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;AzureBlobDownload&#39;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="AzureBlobDownload"><a class="viewcode-back" href="../../download.html#azblobexplorer.AzureBlobDownload">[docs]</a><span class="k">class</span> <span class="nc">AzureBlobDownload</span><span class="p">:</span>
+<div class="viewcode-block" id="AzureBlobDownload"><a class="viewcode-back" href="../../download.html#azblobexplorer.AzureBlobDownload">[docs]</a><span class="k">class</span> <span class="nc">AzureBlobDownload</span><span class="p">(</span><span class="n">BlobBase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Download a file or folder.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">account_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">container_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        :param account_name:</span>
-<span class="sd">            Azure storage account name.</span>
-<span class="sd">        :param account_key:</span>
-<span class="sd">            Azure storage key.</span>
-<span class="sd">        :param container_name:</span>
-<span class="sd">            Azure storage container name, URL will be added automatically.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">account_name</span> <span class="o">=</span> <span class="n">account_name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">account_key</span> <span class="o">=</span> <span class="n">account_key</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">container_name</span> <span class="o">=</span> <span class="n">container_name</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">block_blob_service</span> <span class="o">=</span> <span class="n">BlockBlobService</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">account_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">account_key</span><span class="p">)</span>
-
-<div class="viewcode-block" id="AzureBlobDownload.download_file"><a class="viewcode-back" href="../../download.html#azblobexplorer.AzureBlobDownload.download_file">[docs]</a>    <span class="k">def</span> <span class="nf">download_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blob_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">download_to</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="AzureBlobDownload.download_file"><a class="viewcode-back" href="../../download.html#azblobexplorer.AzureBlobDownload.download_file">[docs]</a>    <span class="k">def</span> <span class="nf">download_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blob_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">download_to</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Download a file to a location.</span>
 
-<span class="sd">        :param blob_name:</span>
+<span class="sd">        :param str blob_name:</span>
 <span class="sd">            Give a blob path with file name.</span>
-<span class="sd">        :param download_to:</span>
+<span class="sd">        :param str download_to:</span>
 <span class="sd">            Give a local absolute path to download.</span>
+<span class="sd">        :param int timeout: Request timeout in seconds</span>
+
+<span class="sd">            .. versionadded:: 2.0</span>
+
 <span class="sd">        :raises OSError: If the directory for ``download_to`` does not exists</span>
 
 <span class="sd">        &gt;&gt;&gt; from azblobexplorer import AzureBlobDownload</span>
@@ -78,7 +65,7 @@
 <span class="sd">        &gt;&gt;&gt; az.download_file(&#39;some/name/file.txt&#39;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">file_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">blob_name</span><span class="p">)</span>
+        <span class="n">file_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">blob_name</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
         <span class="n">file_name</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file_dict</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">name</span>
 
         <span class="k">if</span> <span class="n">download_to</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -90,53 +77,62 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">write_to</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
             <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file_dict</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="AzureBlobDownload.download_folder"><a class="viewcode-back" href="../../download.html#azblobexplorer.AzureBlobDownload.download_folder">[docs]</a>    <span class="k">def</span> <span class="nf">download_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blob_folder_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">download_to</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="AzureBlobDownload.download_folder"><a class="viewcode-back" href="../../download.html#azblobexplorer.AzureBlobDownload.download_folder">[docs]</a>    <span class="k">def</span> <span class="nf">download_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blob_folder_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">download_to</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Download a blob folder.</span>
 
-<span class="sd">        :param blob_folder_name:</span>
+<span class="sd">        :param str blob_folder_name:</span>
 <span class="sd">            Give a folder name.</span>
-<span class="sd">        :param download_to:</span>
+<span class="sd">        :param str download_to:</span>
 <span class="sd">            Give a local path to download.</span>
+<span class="sd">        :param int timeout: Request timeout in seconds</span>
+
+<span class="sd">            .. versionadded:: 2.0</span>
+
 <span class="sd">        :raises NoBlobsFound: If the blob folder is empty or is not found.</span>
 <span class="sd">        :raises OSError: If the directory for ``download_to`` does not exists</span>
 
 <span class="sd">        &gt;&gt;&gt; from azblobexplorer import AzureBlobDownload</span>
 <span class="sd">        &gt;&gt;&gt; az = AzureBlobDownload(&#39;account name&#39;, &#39;account key&#39;, &#39;container name&#39;)</span>
-<span class="sd">        &gt;&gt;&gt; az.download_folder(&#39;some/name/file.txt&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; az.download_folder(&#39;some/folder/name&#39;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">blobs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_blob_service</span><span class="o">.</span><span class="n">list_blobs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">container_name</span><span class="p">,</span> <span class="n">blob_folder_name</span><span class="p">)</span>
+        <span class="n">blobs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">container_client</span><span class="o">.</span><span class="n">list_blobs</span><span class="p">(</span><span class="n">blob_folder_name</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="n">blobs</span><span class="o">.</span><span class="n">items</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">blobs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">NoBlobsFound</span><span class="p">(</span>
                 <span class="s2">&quot;There where 0 blobs found with blob path &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">blob_folder_name</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">download_to</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">blob</span> <span class="ow">in</span> <span class="n">blobs</span><span class="p">:</span>
-                <span class="n">name</span> <span class="o">=</span> <span class="n">blob</span><span class="o">.</span><span class="n">name</span>
-                <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">blob_folder_name</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">blob</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+                <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
                 <span class="n">path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-                <span class="n">_blob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">_blob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
                 <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span>
                 <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">_blob</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">])</span>
                 <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">blob</span> <span class="ow">in</span> <span class="n">blobs</span><span class="p">:</span>
-                <span class="n">name</span> <span class="o">=</span> <span class="n">blob</span><span class="o">.</span><span class="n">name</span>
-                <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">download_to</span><span class="p">,</span> <span class="n">blob_folder_name</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">blob</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+                <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">download_to</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
                 <span class="n">path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-                <span class="n">_blob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">_blob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
                 <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span>
                 <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">_blob</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">])</span>
                 <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="AzureBlobDownload.read_file"><a class="viewcode-back" href="../../download.html#azblobexplorer.AzureBlobDownload.read_file">[docs]</a>    <span class="k">def</span> <span class="nf">read_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blob_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<div class="viewcode-block" id="AzureBlobDownload.read_file"><a class="viewcode-back" href="../../download.html#azblobexplorer.AzureBlobDownload.read_file">[docs]</a>    <span class="k">def</span> <span class="nf">read_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blob_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Read a file.</span>
 
-<span class="sd">        :param blob_name:</span>
+<span class="sd">        :param int timeout: Request timeout in seconds</span>
+
+<span class="sd">            .. versionadded:: 2.0</span>
+
+<span class="sd">        :param str blob_name:</span>
 <span class="sd">            Give a file name.</span>
+<span class="sd">        :rtype: dict</span>
 <span class="sd">        :return:</span>
 <span class="sd">            Returns a dictionary of name, content,</span>
 
@@ -150,91 +146,15 @@
 <span class="sd">        }</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">blob_obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_blob_service</span><span class="o">.</span><span class="n">get_blob_to_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">container_name</span><span class="p">,</span> <span class="n">blob_name</span><span class="p">)</span>
+        <span class="n">blob_obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">container_client</span><span class="o">.</span><span class="n">get_blob_client</span><span class="p">(</span><span class="n">blob_name</span><span class="p">)</span>
+        <span class="n">blob_properties</span> <span class="o">=</span> <span class="n">blob_obj</span><span class="o">.</span><span class="n">get_blob_properties</span><span class="p">()</span>
+        <span class="n">download_blob</span> <span class="o">=</span> <span class="n">blob_obj</span><span class="o">.</span><span class="n">download_blob</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s1">&#39;file_name&#39;</span><span class="p">:</span> <span class="n">blob_obj</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-            <span class="s1">&#39;content&#39;</span><span class="p">:</span> <span class="n">blob_obj</span><span class="o">.</span><span class="n">content</span><span class="p">,</span>
-            <span class="s1">&#39;file_size_bytes&#39;</span><span class="p">:</span> <span class="n">blob_obj</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">content_length</span>
-        <span class="p">}</span></div>
-
-<div class="viewcode-block" id="AzureBlobDownload.generate_url"><a class="viewcode-back" href="../../download.html#azblobexplorer.AzureBlobDownload.generate_url">[docs]</a>    <span class="k">def</span> <span class="nf">generate_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blob_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">permission</span><span class="p">:</span> <span class="n">BlobPermissions</span> <span class="o">=</span> <span class="n">BlobPermissions</span><span class="o">.</span><span class="n">READ</span><span class="p">,</span>
-                     <span class="n">sas</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">access_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate&#39;s blob URL. It can also generate Shared Access Signature (SAS) if ``sas=True``.</span>
-
-<span class="sd">        :param access_time: Time till the URL is valid</span>
-<span class="sd">        :param blob_name: Name of the blob, this could be a path</span>
-<span class="sd">        :type blob_name: str</span>
-<span class="sd">        :param permission: Permissions for the data</span>
-<span class="sd">        :type permission: azure.storage.blob.BlobPermissions</span>
-<span class="sd">        :param sas: Set ``True`` to generate SAS key</span>
-<span class="sd">        :type sas: bool</span>
-<span class="sd">        :return: Blob URL</span>
-<span class="sd">        :rtype: str</span>
-
-<span class="sd">        **Example without ``sas``**</span>
-
-<span class="sd">        &gt;&gt;&gt; import os</span>
-<span class="sd">        &gt;&gt;&gt; from azblobexplorer import AzureBlobDownload</span>
-<span class="sd">        &gt;&gt;&gt; az = AzureBlobDownload(&#39;account name&#39;, &#39;account key&#39;, &#39;container name&#39;)</span>
-<span class="sd">        &gt;&gt;&gt; az.generate_url(&quot;filename.txt&quot;)</span>
-<span class="sd">        https://containername.blob.core.windows.net/blobname/filename.txt</span>
-
-<span class="sd">        **Example with ``upload_to`` and ``sas``**</span>
-
-<span class="sd">        &gt;&gt;&gt; import os</span>
-<span class="sd">        &gt;&gt;&gt; from azblobexplorer import AzureBlobDownload</span>
-<span class="sd">        &gt;&gt;&gt; az = AzureBlobDownload(&#39;account name&#39;, &#39;account key&#39;, &#39;container name&#39;)</span>
-<span class="sd">        &gt;&gt;&gt; az.generate_url(&quot;filename.txt&quot;, sas=True)</span>
-<span class="sd">        https://containername.blob.core.windows.net/blobname/filename.txt?se=2019-11-05T16%3A33%3A46Z&amp;sp=w&amp;sv=2019-02-02&amp;sr=b&amp;sig=t%2BpUG2C2FQKp/Hb8SdCsmaZCZxbYXHUedwsquItGx%2BM%3D</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">if</span> <span class="n">sas</span><span class="p">:</span>
-            <span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_blob_service</span><span class="o">.</span><span class="n">generate_blob_shared_access_signature</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">container_name</span><span class="p">,</span>
-                <span class="n">blob_name</span><span class="p">,</span>
-                <span class="n">permission</span><span class="o">=</span><span class="n">permission</span><span class="p">,</span>
-                <span class="n">expiry</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">access_time</span><span class="p">)</span>
-            <span class="p">)</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_blob_service</span><span class="o">.</span><span class="n">make_blob_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">container_name</span><span class="p">,</span> <span class="n">blob_name</span><span class="p">,</span> <span class="n">sas_token</span><span class="o">=</span><span class="n">token</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_blob_service</span><span class="o">.</span><span class="n">make_blob_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">container_name</span><span class="p">,</span> <span class="n">blob_name</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="AzureBlobDownload.generate_url_mime"><a class="viewcode-back" href="../../download.html#azblobexplorer.AzureBlobDownload.generate_url_mime">[docs]</a>    <span class="k">def</span> <span class="nf">generate_url_mime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blob_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mime_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sas</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-                          <span class="n">permission</span><span class="p">:</span> <span class="n">BlobPermissions</span> <span class="o">=</span> <span class="n">BlobPermissions</span><span class="o">.</span><span class="n">READ</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate&#39;s blob URL with MIME type. It can also generate Shared Access Signature (SAS) if ``sas=True``.</span>
-
-<span class="sd">        :param blob_name: Name of the blob</span>
-<span class="sd">        :type blob_name: str</span>
-<span class="sd">        :param mime_type: MIME type of the application</span>
-<span class="sd">        :type mime_type: str</span>
-<span class="sd">        :param sas: Set ``True`` to generate SAS key</span>
-<span class="sd">        :type sas: bool</span>
-<span class="sd">        :param permission: Permissions for the data</span>
-<span class="sd">        :type permission: azure.storage.blob.BlobPermissions</span>
-<span class="sd">        :return: Blob URL</span>
-<span class="sd">        :rtype: str</span>
-
-<span class="sd">        &gt;&gt;&gt; import os</span>
-<span class="sd">        &gt;&gt;&gt; from azblobexplorer import AzureBlobDownload</span>
-<span class="sd">        &gt;&gt;&gt; az = AzureBlobDownload(&#39;account name&#39;, &#39;account key&#39;, &#39;container name&#39;)</span>
-<span class="sd">        &gt;&gt;&gt; az.generate_url_mime(&quot;filename.zip&quot;, sas=True, mime_type=&quot;application/zip&quot;)</span>
-<span class="sd">        https://containername.blob.core.windows.net/blobname/filename.zip?se=2019-11-05T16%3A33%3A46Z&amp;sp=w&amp;sv=2019-02-02&amp;sr=b&amp;sig=t%2BpUG2C2FQKp/Hb8SdCsmaZCZxbYXHUedwsquItGx%2BM%3D</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">if</span> <span class="n">sas</span><span class="p">:</span>
-            <span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_blob_service</span><span class="o">.</span><span class="n">generate_blob_shared_access_signature</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">container_name</span><span class="p">,</span>
-                <span class="n">blob_name</span><span class="p">,</span>
-                <span class="n">permission</span><span class="o">=</span><span class="n">permission</span><span class="p">,</span>
-                <span class="n">expiry</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
-                <span class="n">content_type</span><span class="o">=</span><span class="n">mime_type</span>
-            <span class="p">)</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_blob_service</span><span class="o">.</span><span class="n">make_blob_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">container_name</span><span class="p">,</span> <span class="n">blob_name</span><span class="p">,</span> <span class="n">sas_token</span><span class="o">=</span><span class="n">token</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_blob_service</span><span class="o">.</span><span class="n">make_blob_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">container_name</span><span class="p">,</span> <span class="n">blob_name</span><span class="p">)</span></div></div>
+            <span class="s1">&#39;file_name&#39;</span><span class="p">:</span> <span class="n">blob_properties</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;content&#39;</span><span class="p">:</span> <span class="n">download_blob</span><span class="o">.</span><span class="n">readall</span><span class="p">(),</span>
+            <span class="s1">&#39;file_size_bytes&#39;</span><span class="p">:</span> <span class="n">blob_properties</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span>
+        <span class="p">}</span></div></div>
 </pre></div>
 
           </div>
@@ -251,7 +171,7 @@
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -262,13 +182,13 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Azure Blob Explorer 1.2.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Azure Blob Explorer 2.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, Akshay Raj Gollahalli.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
     </div>
   </body>
 </html>

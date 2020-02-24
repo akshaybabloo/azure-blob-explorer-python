@@ -1,0 +1,217 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>azblobexplorer.base &#8212; Azure Blob Explorer 2.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Azure Blob Explorer 2.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for azblobexplorer.base</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">datetime</span>
+
+<span class="kn">from</span> <span class="nn">azure.storage.blob</span> <span class="kn">import</span> <span class="n">BlobServiceClient</span><span class="p">,</span> <span class="n">BlobSasPermissions</span><span class="p">,</span> <span class="n">generate_blob_sas</span>
+
+
+<span class="k">class</span> <span class="nc">BlobBase</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    .. versionadded:: 2.0</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">account_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">container_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param str account_name:</span>
+<span class="sd">            Azure storage account name.</span>
+<span class="sd">        :param str account_key:</span>
+<span class="sd">            Azure storage key.</span>
+<span class="sd">        :param str container_name:</span>
+<span class="sd">            Azure storage container name, URL will be added automatically.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">account_name</span> <span class="o">=</span> <span class="n">account_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">account_key</span> <span class="o">=</span> <span class="n">account_key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">container_name</span> <span class="o">=</span> <span class="n">container_name</span>
+
+        <span class="n">block_blob_service</span> <span class="o">=</span> <span class="n">BlobServiceClient</span><span class="o">.</span><span class="n">from_connection_string</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;DefaultEndpointsProtocol=https;AccountName=</span><span class="si">{self.account_name}</span><span class="s2">;AccountKey=</span><span class="si">{self.account_key}</span><span class="s2">;EndpointSuffix=core.windows.net&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">container_client</span> <span class="o">=</span> <span class="n">block_blob_service</span><span class="o">.</span><span class="n">get_container_client</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">container_name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">generate_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blob_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">read</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">add</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                     <span class="n">create</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">write</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">delete</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                     <span class="n">sas</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">access_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate&#39;s blob URL. It can also generate Shared Access Signature (SAS) if ``sas=True``.</span>
+
+<span class="sd">        :param bool write: Write access</span>
+
+<span class="sd">            .. versionadded:: 2.0</span>
+
+<span class="sd">        :param bool create: Create access</span>
+
+<span class="sd">            .. versionadded:: 2.0</span>
+
+<span class="sd">        :param bool add: Add access</span>
+
+<span class="sd">            .. versionadded:: 2.0</span>
+
+<span class="sd">        :param bool read: Read access</span>
+
+<span class="sd">            .. versionadded:: 2.0</span>
+
+<span class="sd">        :param bool delete: Delete access</span>
+
+<span class="sd">            .. versionadded:: 2.0</span>
+
+<span class="sd">        :param int access_time: Time till the URL is valid</span>
+<span class="sd">        :param str blob_name: Name of the blob, this could be a path</span>
+<span class="sd">        :param bool sas: Set ``True`` to generate SAS key</span>
+<span class="sd">        :return: Blob URL</span>
+
+<span class="sd">        **Example without ``sas``**</span>
+
+<span class="sd">        &gt;&gt;&gt; import os</span>
+<span class="sd">        &gt;&gt;&gt; from azblobexplorer import AzureBlobDownload</span>
+<span class="sd">        &gt;&gt;&gt; az = AzureBlobDownload(&#39;account name&#39;, &#39;account key&#39;, &#39;container name&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; az.generate_url(&quot;filename.txt&quot;)</span>
+<span class="sd">        https://containername.blob.core.windows.net/blobname/filename.txt</span>
+
+<span class="sd">        **Example with ``upload_to`` and ``sas``**</span>
+
+<span class="sd">        &gt;&gt;&gt; import os</span>
+<span class="sd">        &gt;&gt;&gt; from azblobexplorer import AzureBlobDownload</span>
+<span class="sd">        &gt;&gt;&gt; az = AzureBlobDownload(&#39;account name&#39;, &#39;account key&#39;, &#39;container name&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; az.generate_url(&quot;filename.txt&quot;, sas=True)</span>
+<span class="sd">        https://containername.blob.core.windows.net/blobname/filename.txt?se=2019-11-05T16%3A33%3A46Z&amp;sp=w&amp;sv=2019-02-02&amp;sr=b&amp;sig=t%2BpUG2C2FQKp/Hb8SdCsmaZCZxbYXHUedwsquItGx%2BM%3D</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">blob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">container_client</span><span class="o">.</span><span class="n">get_blob_client</span><span class="p">(</span><span class="n">blob_name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">sas</span><span class="p">:</span>
+            <span class="n">sas_token</span> <span class="o">=</span> <span class="n">generate_blob_sas</span><span class="p">(</span>
+                <span class="n">blob</span><span class="o">.</span><span class="n">account_name</span><span class="p">,</span>
+                <span class="n">blob</span><span class="o">.</span><span class="n">container_name</span><span class="p">,</span>
+                <span class="n">blob</span><span class="o">.</span><span class="n">blob_name</span><span class="p">,</span>
+                <span class="n">account_key</span><span class="o">=</span><span class="n">blob</span><span class="o">.</span><span class="n">credential</span><span class="o">.</span><span class="n">account_key</span><span class="p">,</span>
+                <span class="n">permission</span><span class="o">=</span><span class="n">BlobSasPermissions</span><span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">add</span><span class="p">,</span> <span class="n">create</span><span class="p">,</span> <span class="n">write</span><span class="p">,</span> <span class="n">delete</span><span class="p">),</span>
+                <span class="n">expiry</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">access_time</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">blob</span><span class="o">.</span><span class="n">url</span> <span class="o">+</span> <span class="s1">&#39;?&#39;</span> <span class="o">+</span> <span class="n">sas_token</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">blob</span><span class="o">.</span><span class="n">url</span>
+
+    <span class="k">def</span> <span class="nf">generate_url_mime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blob_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mime_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sas</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                          <span class="n">read</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">add</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">create</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                          <span class="n">write</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">delete</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">access_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate&#39;s blob URL with MIME type. It can also generate Shared Access Signature (SAS) if ``sas=True``.</span>
+
+<span class="sd">        :param bool write: Write access</span>
+
+<span class="sd">            .. versionadded:: 2.0</span>
+
+<span class="sd">        :param bool create: Create access</span>
+
+<span class="sd">            .. versionadded:: 2.0</span>
+
+<span class="sd">        :param bool add: Add access</span>
+
+<span class="sd">            .. versionadded:: 2.0</span>
+
+<span class="sd">        :param bool read: Read access</span>
+
+<span class="sd">            .. versionadded:: 2.0</span>
+
+<span class="sd">        :param bool delete: Delete access</span>
+
+<span class="sd">            .. versionadded:: 2.0</span>
+
+<span class="sd">        :param int access_time: Time till the URL is valid</span>
+<span class="sd">        :param str blob_name: Name of the blob</span>
+<span class="sd">        :param int access_time: Time till the URL is valid</span>
+<span class="sd">        :param str mime_type: MIME type of the application</span>
+<span class="sd">        :param bool sas: Set ``True`` to generate SAS key</span>
+<span class="sd">        :return: Blob URL</span>
+
+<span class="sd">        &gt;&gt;&gt; import os</span>
+<span class="sd">        &gt;&gt;&gt; from azblobexplorer import AzureBlobDownload</span>
+<span class="sd">        &gt;&gt;&gt; az = AzureBlobDownload(&#39;account name&#39;, &#39;account key&#39;, &#39;container name&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; az.generate_url_mime(&quot;filename.zip&quot;, sas=True, mime_type=&quot;application/zip&quot;)</span>
+<span class="sd">        https://containername.blob.core.windows.net/blobname/filename.zip?se=2019-11-05T16%3A33%3A46Z&amp;sp=w&amp;sv=2019-02-02&amp;sr=b&amp;sig=t%2BpUG2C2FQKp/Hb8SdCsmaZCZxbYXHUedwsquItGx%2BM%3D</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">blob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">container_client</span><span class="o">.</span><span class="n">get_blob_client</span><span class="p">(</span><span class="n">blob_name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">sas</span><span class="p">:</span>
+            <span class="n">sas_token</span> <span class="o">=</span> <span class="n">generate_blob_sas</span><span class="p">(</span>
+                <span class="n">blob</span><span class="o">.</span><span class="n">account_name</span><span class="p">,</span>
+                <span class="n">blob</span><span class="o">.</span><span class="n">container_name</span><span class="p">,</span>
+                <span class="n">blob</span><span class="o">.</span><span class="n">blob_name</span><span class="p">,</span>
+                <span class="n">account_key</span><span class="o">=</span><span class="n">blob</span><span class="o">.</span><span class="n">credential</span><span class="o">.</span><span class="n">account_key</span><span class="p">,</span>
+                <span class="n">permission</span><span class="o">=</span><span class="n">BlobSasPermissions</span><span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">add</span><span class="p">,</span> <span class="n">create</span><span class="p">,</span> <span class="n">write</span><span class="p">,</span> <span class="n">delete</span><span class="p">),</span>
+                <span class="n">expiry</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">access_time</span><span class="p">),</span>
+                <span class="n">content_type</span><span class="o">=</span><span class="n">mime_type</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">blob</span><span class="o">.</span><span class="n">url</span> <span class="o">+</span> <span class="s1">&#39;?&#39;</span> <span class="o">+</span> <span class="n">sas_token</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">blob</span><span class="o">.</span><span class="n">url</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Azure Blob Explorer 2.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Akshay Raj Gollahalli.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+    </div>
+  </body>
+</html>

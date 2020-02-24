@@ -4,14 +4,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>azblobexplorer.upload &#8212; Azure Blob Explorer 1.2.0 documentation</title>
+    <title>azblobexplorer.upload &#8212; Azure Blob Explorer 2.0 documentation</title>
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
@@ -21,7 +21,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Azure Blob Explorer 1.2.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Azure Blob Explorer 2.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -33,42 +33,31 @@
             
   <h1>Source code for azblobexplorer.upload</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="k">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">from</span> <span class="nn">azure.storage.blob</span> <span class="k">import</span> <span class="n">BlockBlobService</span><span class="p">,</span> <span class="n">BlobPermissions</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+
+<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">BlobBase</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;AzureBlobUpload&#39;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="AzureBlobUpload"><a class="viewcode-back" href="../../upload.html#azblobexplorer.AzureBlobUpload">[docs]</a><span class="k">class</span> <span class="nc">AzureBlobUpload</span><span class="p">:</span>
+<div class="viewcode-block" id="AzureBlobUpload"><a class="viewcode-back" href="../../upload.html#azblobexplorer.AzureBlobUpload">[docs]</a><span class="k">class</span> <span class="nc">AzureBlobUpload</span><span class="p">(</span><span class="n">BlobBase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Upload a file or a folder.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">account_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">container_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        :param account_name:</span>
-<span class="sd">            Azure storage account name.</span>
-<span class="sd">        :param account_key:</span>
-<span class="sd">            Azure storage key.</span>
-<span class="sd">        :param container_name:</span>
-<span class="sd">            Azure storage container name, URL will be added automatically.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">account_name</span> <span class="o">=</span> <span class="n">account_name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">account_key</span> <span class="o">=</span> <span class="n">account_key</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">container_name</span> <span class="o">=</span> <span class="n">container_name</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">block_blob_service</span> <span class="o">=</span> <span class="n">BlockBlobService</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">account_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">account_key</span><span class="p">)</span>
-
-<div class="viewcode-block" id="AzureBlobUpload.upload_file"><a class="viewcode-back" href="../../upload.html#azblobexplorer.AzureBlobUpload.upload_file">[docs]</a>    <span class="k">def</span> <span class="nf">upload_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">upload_to</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="AzureBlobUpload.upload_file"><a class="viewcode-back" href="../../upload.html#azblobexplorer.AzureBlobUpload.upload_file">[docs]</a>    <span class="k">def</span> <span class="nf">upload_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">upload_to</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Upload a file to a given blob path.</span>
 
-<span class="sd">        :param upload_to:</span>
+<span class="sd">        :param str upload_to:</span>
 <span class="sd">            Give the path to upload.</span>
-<span class="sd">        :param file_path:</span>
+<span class="sd">        :param str file_path:</span>
 <span class="sd">            Absolute path of the file to upload.</span>
+<span class="sd">        :param int timeout: Request timeout in seconds</span>
+
+<span class="sd">            .. versionadded:: 2.0</span>
 
 <span class="sd">        &gt;&gt;&gt; from azblobexplorer import AzureBlobUpload</span>
 <span class="sd">        &gt;&gt;&gt; import os</span>
@@ -80,17 +69,23 @@
         <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">upload_to</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">block_blob_service</span><span class="o">.</span><span class="n">create_blob_from_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">container_name</span><span class="p">,</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+            <span class="n">blob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">container_client</span><span class="o">.</span><span class="n">get_blob_client</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">blob</span><span class="o">.</span><span class="n">upload_blob</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">block_blob_service</span><span class="o">.</span><span class="n">create_blob_from_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">container_name</span><span class="p">,</span>
-                                                          <span class="n">upload_to</span> <span class="o">+</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span></div>
+            <span class="n">blob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">container_client</span><span class="o">.</span><span class="n">get_blob_client</span><span class="p">(</span><span class="n">upload_to</span> <span class="o">+</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">blob</span><span class="o">.</span><span class="n">upload_blob</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AzureBlobUpload.upload_files"><a class="viewcode-back" href="../../upload.html#azblobexplorer.AzureBlobUpload.upload_files">[docs]</a>    <span class="k">def</span> <span class="nf">upload_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files_path</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+<div class="viewcode-block" id="AzureBlobUpload.upload_files"><a class="viewcode-back" href="../../upload.html#azblobexplorer.AzureBlobUpload.upload_files">[docs]</a>    <span class="k">def</span> <span class="nf">upload_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files_path</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Upload a list of files.</span>
 
-<span class="sd">        :param list files_path:</span>
+<span class="sd">        :param list(str) files_path:</span>
 <span class="sd">            A list of files to upload.</span>
+<span class="sd">        :param int timeout: Request timeout in seconds</span>
+
+<span class="sd">            .. versionadded:: 2.0</span>
 
 <span class="sd">        &gt;&gt;&gt; import os</span>
 <span class="sd">        &gt;&gt;&gt; from azblobexplorer import AzureBlobUpload</span>
@@ -106,18 +101,21 @@
 
         <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">files_path</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">upload_file</span><span class="p">(</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">path</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">upload_file</span><span class="p">(</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">path</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">upload_file</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">upload_file</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AzureBlobUpload.upload_folder"><a class="viewcode-back" href="../../upload.html#azblobexplorer.AzureBlobUpload.upload_folder">[docs]</a>    <span class="k">def</span> <span class="nf">upload_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">upload_to</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="AzureBlobUpload.upload_folder"><a class="viewcode-back" href="../../upload.html#azblobexplorer.AzureBlobUpload.upload_folder">[docs]</a>    <span class="k">def</span> <span class="nf">upload_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">upload_to</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Upload a folder to a given blob path.</span>
 
-<span class="sd">        :param upload_to:</span>
+<span class="sd">        :param str upload_to:</span>
 <span class="sd">            Give the path to upload. Default ``None``.</span>
-<span class="sd">        :param folder_path:</span>
+<span class="sd">        :param str folder_path:</span>
 <span class="sd">            Absolute path of the folder to upload.</span>
+<span class="sd">        :param int timeout: Request timeout in seconds</span>
+
+<span class="sd">            .. versionadded:: 2.0</span>
 
 <span class="sd">        **Example without &quot;upload_to&quot;**</span>
 
@@ -149,51 +147,9 @@
                 <span class="n">rel_folder_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_name</span><span class="p">,</span> <span class="n">rel_dir</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span>
                 <span class="n">abs_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_dir</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">upload_to</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">upload_file</span><span class="p">(</span><span class="n">abs_path</span><span class="p">,</span> <span class="n">rel_folder_path</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">upload_file</span><span class="p">(</span><span class="n">abs_path</span><span class="p">,</span> <span class="n">rel_folder_path</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">upload_file</span><span class="p">(</span><span class="n">abs_path</span><span class="p">,</span> <span class="n">upload_to</span> <span class="o">+</span> <span class="n">rel_folder_path</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="AzureBlobUpload.generate_url"><a class="viewcode-back" href="../../upload.html#azblobexplorer.AzureBlobUpload.generate_url">[docs]</a>    <span class="k">def</span> <span class="nf">generate_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blob_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">permission</span><span class="p">:</span> <span class="n">BlobPermissions</span> <span class="o">=</span> <span class="n">BlobPermissions</span><span class="o">.</span><span class="n">WRITE</span><span class="p">,</span>
-                     <span class="n">sas</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">access_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate&#39;s blob URL to upload a file. It can also generate Shared Access Signature (SAS) if ``sas=True``.</span>
-
-<span class="sd">        :param blob_name: Name of the file that you are uploading, this can also be a path with file name</span>
-<span class="sd">        :param access_time: Time till the URL is valid</span>
-<span class="sd">        :param permission: Permissions for the data</span>
-<span class="sd">        :type permission: azure.storage.blob.BlobPermissions</span>
-<span class="sd">        :param sas: Set ``True`` to generate SAS key</span>
-<span class="sd">        :type sas: bool</span>
-<span class="sd">        :return: Blob URL</span>
-<span class="sd">        :rtype: str</span>
-
-<span class="sd">        **Example without ``sas``**</span>
-
-<span class="sd">        &gt;&gt;&gt; import os</span>
-<span class="sd">        &gt;&gt;&gt; from azblobexplorer import AzureBlobUpload</span>
-<span class="sd">        &gt;&gt;&gt; az = AzureBlobUpload(&#39;account name&#39;, &#39;account key&#39;, &#39;container name&#39;)</span>
-<span class="sd">        &gt;&gt;&gt; az.generate_url(&quot;filename.txt&quot;)</span>
-<span class="sd">        https://containername.blob.core.windows.net/blobname/filename.txt</span>
-
-<span class="sd">        **Example with ``sas``**</span>
-
-<span class="sd">        &gt;&gt;&gt; import os</span>
-<span class="sd">        &gt;&gt;&gt; from azblobexplorer import AzureBlobUpload</span>
-<span class="sd">        &gt;&gt;&gt; az = AzureBlobUpload(&#39;account name&#39;, &#39;account key&#39;, &#39;container name&#39;)</span>
-<span class="sd">        &gt;&gt;&gt; az.generate_url(&quot;path/to/filename.txt&quot;, sas=True)</span>
-<span class="sd">        https://containername.blob.core.windows.net/blobname/path/to/upload/path/to/filename.txt?se=2019-11-05T16%3A33%3A46Z&amp;sp=w&amp;sv=2019-02-02&amp;sr=b&amp;sig=t%2BpUG2C2FQKp/Hb8SdCsmaZCZxbYXHUedwsquItGx%2BM%3D</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">if</span> <span class="n">sas</span><span class="p">:</span>
-            <span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_blob_service</span><span class="o">.</span><span class="n">generate_blob_shared_access_signature</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">container_name</span><span class="p">,</span>
-                <span class="n">blob_name</span><span class="p">,</span>
-                <span class="n">permission</span><span class="o">=</span><span class="n">permission</span><span class="p">,</span>
-                <span class="n">expiry</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">access_time</span><span class="p">)</span>
-            <span class="p">)</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_blob_service</span><span class="o">.</span><span class="n">make_blob_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">container_name</span><span class="p">,</span> <span class="n">blob_name</span><span class="p">,</span> <span class="n">sas_token</span><span class="o">=</span><span class="n">token</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_blob_service</span><span class="o">.</span><span class="n">make_blob_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">container_name</span><span class="p">,</span> <span class="n">blob_name</span><span class="p">)</span></div></div>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">upload_file</span><span class="p">(</span><span class="n">abs_path</span><span class="p">,</span> <span class="n">upload_to</span> <span class="o">+</span> <span class="n">rel_folder_path</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>
@@ -210,7 +166,7 @@
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -221,13 +177,13 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Azure Blob Explorer 1.2.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Azure Blob Explorer 2.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, Akshay Raj Gollahalli.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
     </div>
   </body>
 </html>
